@@ -1,6 +1,6 @@
 master.zip
 secp256k1-zkp-master
-Secp256k1-zkp-WASM-Wrapper
+Secp256k1-zkp-WASM-Wrapper-master
 node_modules
 lib
 yarn.lock
