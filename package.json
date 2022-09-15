@@ -1,6 +1,6 @@
 {
 	"name": "@nicolasflamel/secp256k1-zkp-react",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "React Native module for parts of libsecp256k1-zkp",
 	"react-native": "src/index",
 	"source": "src/index",
@@ -11,7 +11,7 @@
 		"cpp",
 		"secp256k1-zkp-react.podspec",
 		"secp256k1-zkp-master",
-		"Secp256k1-zkp-WASM-Wrapper"
+		"Secp256k1-zkp-WASM-Wrapper-master"
 	],
 	"scripts": {
 		"typescript": "tsc --noEmit",
