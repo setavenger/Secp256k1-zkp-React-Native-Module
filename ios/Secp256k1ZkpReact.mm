@@ -50,7 +50,7 @@ RCT_EXPORT_METHOD(isValidSecretKey:(nonnull NSString *)secretKey
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 
 		// Resolve if secret key is a valid secret key
-		resolve(isValidSecretKey(secretKeyData.data(), secretKeyData.size()) ? YES : NO);
+		resolve([NSNumber numberWithBool:isValidSecretKey(secretKeyData.data(), secretKeyData.size()) ? YES : NO]);
 	}
 
 	// Catch errors
