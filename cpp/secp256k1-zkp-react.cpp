@@ -6,7 +6,7 @@
 namespace Secp256k1Zkp {
 
 	// Header files
-	#include "../Secp256k1-zkp-WASM-Wrapper-master/main.cpp"
+	#include "../Secp256k1-zkp-NPM-Package-master/main.cpp"
 }
 
 using namespace std;

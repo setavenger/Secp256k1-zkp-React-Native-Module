@@ -31,6 +31,9 @@ static jstring toHexString(JNIEnv *environment, const vector<uint8_t> &input);
 // Character to number
 static uint8_t characterToNumber(char character);
 
+// To bool
+static jboolean toBool(bool input);
+
 
 // Supporting function implementation
 
@@ -44,7 +47,7 @@ jboolean Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeIsValidSecretK
 		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
 
 		// Return if secret key is a valid secret key
-		return isValidSecretKey(secretKeyData.data(), secretKeyData.size()) ? JNI_TRUE : JNI_FALSE;
+		return toBool(isValidSecretKey(secretKeyData.data(), secretKeyData.size()));
 	}
 	
 	// Catch errors
@@ -246,4 +249,11 @@ uint8_t characterToNumber(char character) {
 			// Throw error
 			throw runtime_error("Getting character as a number failed");
 	}
+}
+
+// To bool
+jboolean toBool(bool input) {
+
+	// Return input as a bool
+	return input ? JNI_TRUE : JNI_FALSE;
 }

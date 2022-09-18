@@ -28,6 +28,9 @@ static const NSString *toHexString(const vector<uint8_t> &input);
 // Character to number
 static uint8_t characterToNumber(char character);
 
+// To bool
+static const NSNumber *toBool(bool input);
+
 
 // Implementations
 
@@ -50,7 +53,7 @@ RCT_EXPORT_METHOD(isValidSecretKey:(nonnull NSString *)secretKey
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 
 		// Resolve if secret key is a valid secret key
-		resolve([NSNumber numberWithBool:isValidSecretKey(secretKeyData.data(), secretKeyData.size()) ? YES : NO]);
+		resolve(toBool(isValidSecretKey(secretKeyData.data(), secretKeyData.size())));
 	}
 
 	// Catch errors
@@ -260,4 +263,19 @@ uint8_t characterToNumber(char character) {
 			// Throw error
 			throw runtime_error("Getting character as a number failed");
 	}
+}
+
+// To bool
+const NSNumber *toBool(bool input) {
+
+	// Check if getting input as a bool failed
+	const NSNumber *result = [NSNumber numberWithBool:input ? YES : NO];
+	if(!result) {
+
+		// Throw error
+		throw runtime_error("Getting input as a bool failed");
+	}
+
+	// Return result
+	return result;
 }

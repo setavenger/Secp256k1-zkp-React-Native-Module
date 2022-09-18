@@ -3,17 +3,15 @@ import { NativeModules, Platform } from "react-native";
 //import { Buffer } from "buffer";
 
 
-// Constants
+// Check if secp256k1-zkp React module doesn't exist
+if(!NativeModules.Secp256k1ZkpReact) {
 
-// Linking error
-const LINKING_ERROR = "The package '@nicolasflamel/secp256k1-zkp-react' doesn't seem to be linked. Make sure: \n\n" + Platform.select({ ios: "- You have run 'pod install'\n", default: "" }) + "- You rebuilt the app after installing the package\n- You are not using Expo managed workflow\n";
-
-// Secp256k1-zkp React
-const Secp256k1ZkpReact = NativeModules.Secp256k1ZkpReact ? NativeModules.Secp256k1ZkpReact : new Proxy({}, {
-	get() {
-		throw new Error(LINKING_ERROR);
-	}
-});
+	// Throw error
+	throw new Error("The package '@nicolasflamel/secp256k1-zkp-react' doesn't seem to be linked. Make sure: \n\n" + Platform.select({
+		ios: "- You have run 'pod install'\n",
+		default: ""
+	}) + "- You rebuilt the app after installing the package\n- You are not using Expo managed workflow\n");
+}
 
 
 // Classes
@@ -23,6 +21,17 @@ export default class Secp256k1Zkp {
 
 	// Operation failed
 	public static readonly OPERATION_FAILED = null;
+	
+	// No secret nonce
+	public static readonly NO_SECRET_NONCE = null;
+	
+	// No public nonce
+	public static readonly NO_PUBLIC_NONCE = null;
+	
+	// No public nonce total
+	public static readonly NO_PUBLIC_NONCE_TOTAL = null;
+	
+	// blindSum
 
 	// Is valid secret key
 	static async isValidSecretKey(
@@ -32,8 +41,8 @@ export default class Secp256k1Zkp {
 		// Try
 		try {
 	
-			// Return if secret key is a valid secret key
-			return await Secp256k1ZkpReact.isValidSecretKey(secretKey.toString("hex"));
+			// Return if secret key is a valid secret key with secp256k1-zkp React module
+			return await NativeModules.Secp256k1ZkpReact.isValidSecretKey(secretKey.toString("hex"));
 		}
 		
 		// Catch errors
@@ -45,4 +54,23 @@ export default class Secp256k1Zkp {
 			return Secp256k1Zkp.OPERATION_FAILED;
 		}
 	}
+	
+	/*isValidSecretKey
+	isValidPublicKey
+	isValidCommit
+	isValidSingleSignerSignature
+	*createBulletproofBlindless
+	*rewindBulletproof
+	*verifyBulletproof
+	publicKeyFromData
+	pedersenCommit
+	pedersenCommitSum
+	pedersenCommitToPublicKey
+	publicKeyToPedersenCommit
+	addSingleSignerSignatures
+	verifySingleSignerSignature
+	singleSignerSignatureFromData
+	compactSingleSignerSignature
+	uncompactSingleSignerSignature
+	combinePublicKeys*/
 }
