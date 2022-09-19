@@ -2,14 +2,15 @@
 #include <string>
 #include "./secp256k1-zkp-react.h"
 
+using namespace std;
+
+
 // Secp256k1-zkp namespace
 namespace Secp256k1Zkp {
 
 	// Header files
 	#include "../Secp256k1-zkp-NPM-Package-master/main.cpp"
 }
-
-using namespace std;
 
 // Function prototypes
 
