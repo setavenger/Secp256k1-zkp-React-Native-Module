@@ -28,6 +28,9 @@ static const NSString *toHexString(const vector<uint8_t> &input);
 // Character to number
 static uint8_t characterToNumber(char character);
 
+// From bool
+static bool fromBool(const NSNumber *input);
+
 // To bool
 static const NSNumber *toBool(bool input);
 
@@ -39,6 +42,85 @@ static const NSNumber *toBool(bool input);
 
 // Export module
 RCT_EXPORT_MODULE()
+
+// Blind sum
+RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
+	withNegativeBlinds:(nonnull NSArray *)negativeBlinds
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get number of positive blinds
+		const NSUInteger numberOfPositiveBlinds = [positiveBlinds count];
+	
+		// Initialize positive blinds data and positive blinds sizes
+		vector<uint8_t> positiveBlindsData;
+		size_t positiveBlindsSizes[numberOfPositiveBlinds];
+		
+		// Go through all positive blinds
+		for(const NSString *blind in positiveBlinds) {
+		
+			// Get data from blind
+			const vector<uint8_t> blindData = fromHexString(blind);
+			
+			// Append blind data to positive blinds data
+			positiveBlindsData.insert(positiveBlindsData.cend(), blindData.cbegin(), blindData.cend());
+			
+			// Append blind data's size to positive blinds sizes
+			positiveBlindsSizes[i] = blindData.size();
+		}
+		
+		// Get number of negative blinds
+		const NSUInteger numberOfNegativeBlinds = [negativeBlinds count];
+		
+		// Initialize negative blinds data and negative blinds sizes
+		vector<uint8_t> negativeBlindsData;
+		size_t negativeBlindsSizes[numberOfNegativeBlinds];
+		
+		// Go through all negative blinds
+		for(const NSString *blind in negativeBlinds) {
+		
+			// Get data from blind
+			const vector<uint8_t> blindData = fromHexString(blind);
+			
+			// Append blind data to negative blinds data
+			negativeBlindsData.insert(negativeBlindsData.cend(), blindData.cbegin(), blindData.cend());
+			
+			// Append blind data's size to negative blinds sizes
+			negativeBlindsSizes[i] = blindData.size();
+		}
+		
+		//Resolve performing blind sum
+		resolve(toHexString(blindSum(positiveBlindsData.data(), positiveBlindsSizes, numberOfPositiveBlinds, negativeBlindsData.data(), negativeBlindsSizes, numberOfNegativeBlinds)));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
 
 // Is valid secret key
 RCT_EXPORT_METHOD(isValidSecretKey:(nonnull NSString *)secretKey
@@ -54,6 +136,873 @@ RCT_EXPORT_METHOD(isValidSecretKey:(nonnull NSString *)secretKey
 
 		// Resolve if secret key is a valid secret key
 		resolve(toBool(isValidSecretKey(secretKeyData.data(), secretKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Is valid public key
+RCT_EXPORT_METHOD(isValidPublicKey:(nonnull NSString *)publicKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+
+		// Resolve if public key is a valid public key
+		resolve(toBool(isValidPublicKey(publicKeyData.data(), publicKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Is valid commit
+RCT_EXPORT_METHOD(isValidCommit:(nonnull NSString *)commit
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from commit
+		const vector<uint8_t> commitData = fromHexString(commit);
+
+		// Resolve if commit is a valid commit
+		resolve(toBool(isValidCommit(commitData.data(), commitData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Is valid single-signer signature
+RCT_EXPORT_METHOD(isValidSingleSignerSignature:(nonnull NSString *)signature
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from signature
+		const vector<uint8_t> signatureData = fromHexString(signature);
+
+		// Resolve if signature is a valid single-signer signature
+		resolve(toBool(isValidSingleSignerSignature(signatureData.data(), signatureData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Create bulletproof blindless
+RCT_EXPORT_METHOD(createBulletproofBlindless:(nonnull NSString *)tauX
+	withTOne:(nonnull NSString *)tOne
+	withTTwo:(nonnull NSString *)tTwo
+	withCommit:(nonnull NSString *)commit
+	withValue:(nonnull NSString *)value
+	withNonce:(nonnull NSString *)nonce
+	withExtraCommit:(nonnull NSString *)extraCommit
+	withMessage:(nonnull NSString *)message
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from tau X
+		vector<uint8_t> tauXData = fromHexString(tauX);
+		
+		// Get data from t one
+		const vector<uint8_t> tOneData = fromHexString(tOne);
+		
+		// Get data from t two
+		const vector<uint8_t> tTwoData = fromHexString(tTwo);
+		
+		// Get data from commit
+		const vector<uint8_t> commitData = fromHexString(commit);
+		
+		// Check if getting data from value failed
+		const char *valueData = [value UTF8String];
+		if(!valueData) {
+
+			// Throw error
+			throw runtime_error("Getting data from value failed");
+		}
+		
+		// Get data from nonce
+		const vector<uint8_t> nonceData = fromHexString(nonce);
+		
+		// Get data from extra commit
+		const vector<uint8_t> extraCommitData = fromHexString(extraCommit);
+		
+		// Get data from message
+		const vector<uint8_t> messageData = fromHexString(message);
+
+		// Resolve creating bulletproof blindless
+		resolve(toHexString(createBulletproofBlindless(tauXData.data(), tauXData.size(), tOneData.data(), tOneData.size(), tTwoData.data(), tTwoData.size(), commitData.data(), commitData.size(), valueData, nonceData.data(), nonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Rewind bulletproof
+RCT_EXPORT_METHOD(rewindBulletproof:(nonnull NSString *)proof
+	withCommit:(nonnull NSString *)commit
+	withNonce:(nonnull NSString *)nonce
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from proof
+		const vector<uint8_t> proofData = fromHexString(proof);
+		
+		// Get data from commit
+		const vector<uint8_t> commitData = fromHexString(commit);
+		
+		// Get data from nonce
+		const vector<uint8_t> nonceData = fromHexString(nonce);
+
+		// Performing rewind bulletproof
+		const tuple<string, vector<uint8_t>, vector<uint8_t>> bulletproofData = rewindBulletproof(proofData.data(), proofData.size(), commitData.data(), commitData.size(), nonceData.data(), nonceData.size());
+		
+		// Check if getting value as a string failed
+		const NSString *valueString = [NSString stringWithUTF8String:get<0>(bulletproofData).c_str()];
+		if(!valueString) {
+
+			// Throw error
+			throw runtime_error("Getting value as a string failed");
+		}
+		
+		// Check if creating result failed
+		const NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:@"Value", valueString, @"Blind", toHexString(get<1>(bulletproofData)), @"Message", toHexString(get<2>(bulletproofData)), nil];
+		if(!result) {
+		
+			// Throw error
+			throw runtime_error("Creating result failed");
+		}
+		
+		// Resolve result
+		resolve(result);
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Verify bulletproof
+RCT_EXPORT_METHOD(verifyBulletproof:(nonnull NSString *)proof
+	withCommit:(nonnull NSString *)commit
+	withExtraCommit:(nonnull NSString *)extraCommit
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from proof
+		const vector<uint8_t> proofData = fromHexString(proof);
+		
+		// Get data from commit
+		const vector<uint8_t> commitData = fromHexString(commit);
+		
+		// Get data from extra commit
+		const vector<uint8_t> extraCommitData = fromHexString(extraCommit);
+
+		// Return if bulletproof is verified
+		resolve(toBool(verifyBulletproof(proofData.data(), proofData.size(), commitData.data(), commitData.size(), extraCommitData.data(), extraCommitData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Public key from data
+RCT_EXPORT_METHOD(publicKeyFromData:(nonnull NSString *)data
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from data
+		const vector<uint8_t> dataData = fromHexString(data);
+
+		// Resolve getting public key from data
+		resolve(toHexString(publicKeyFromData(dataData.data(), dataData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Pedersen commit
+RCT_EXPORT_METHOD(pedersenCommit:(nonnull NSString *)blind
+	withValue:(nonnull NSString *)value
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from blind
+		const vector<uint8_t> blindData = fromHexString(blind);
+		
+		// Check if getting data from value failed
+		const char *valueData = [value UTF8String];
+		if(!valueData) {
+
+			// Throw error
+			throw runtime_error("Getting data from value failed");
+		}
+
+		// Resolve performing Pedersen commit
+		resolve(toHexString(pedersenCommit(blindData.data(), blindData.size(), valueData)));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Pedersen commit sum
+RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSSArray *)positiveCommits
+	withNegativeCommits:(nonnull NSArray *)negativeCommits
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get number of positive commits
+		const NSUInteger numberOfPositiveCommits = [positiveCommits count];
+	
+		// Initialize positive commits data and positive commits sizes
+		vector<uint8_t> positiveCommitsData;
+		size_t positiveCommitsSizes[numberOfPositiveCommits];
+		
+		// Go through all positive commits
+		for(const NSString *commit in positiveCommits) {
+		
+			// Get data from commit
+			const vector<uint8_t> commitData = fromHexString(commit);
+			
+			// Append commit data to positive commits data
+			positiveCommitsData.insert(positiveCommitsData.cend(), commitData.cbegin(), commitData.cend());
+			
+			// Append commit data's size to positive commits sizes
+			positiveCommitsSizes[i] = commitData.size();
+		}
+		
+		// Get number of negative commits
+		const NSUInteger numberOfNegativeCommits = [negativeCommits count];
+	
+		// Initialize negative commits data and negative commits sizes
+		vector<uint8_t> negativeCommitsData;
+		size_t negativeCommitsSizes[numberOfNegativeCommits];
+		
+		// Go through all negative commits
+		for(const NSString *commit in negativeCommits) {
+		
+			// Get data from commit
+			const vector<uint8_t> commitData = fromHexString(commit);
+			
+			// Append commit data to negative commits data
+			negativeCommitsData.insert(negativeCommitsData.cend(), commitData.cbegin(), commitData.cend());
+			
+			// Append commit data's size to negative commits sizes
+			negativeCommitsSizes[i] = commitData.size();
+		}
+		
+		// Resolve performing Pedersen commit sum
+		resolve(toHexString(pedersenCommitSum(positiveCommitsData.data(), positiveCommitsSizes, numberOfPositiveCommits, negativeCommitsData.data(), negativeCommitsSizes, numberOfNegativeCommits)));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Pedersen commit to public key
+RCT_EXPORT_METHOD(pedersenCommitToPublicKey:(nonnull NSString *)commit
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from commit
+		const vector<uint8_t> commitData = fromHexString(commit);
+
+		// Resolve getting public key from Pedersen commit
+		resolve(toHexString(pedersenCommitToPublicKey(commitData.data(), commitData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Public key to Pedersen commit
+RCT_EXPORT_METHOD(publicKeyToPedersenCommit:(nonnull NSString *)publicKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+
+		// Resolve getting Pedersen commit from public key
+		resolve(toHexString(publicKeyToPedersenCommit(publicKeyData.data(), publicKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Add single-signer signatures
+RCT_EXPORT_METHOD(addSingleSignerSignatures:(nonnull NSArray *)signatures
+	withPublicNonceTotal:(nonnull NSString *)publicNonceTotal
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get number of signatures
+		const NSUInteger numberOfSignatures = [signatures count];
+	
+		// Initialize signatures data and signatures sizes
+		vector<uint8_t> signaturesData;
+		size_t signaturesSizes[numberOfSignatures];
+		
+		// Go through all signatures
+		for(const NSString *signature in signatures) {
+		
+			// Get data from signature
+			const vector<uint8_t> signatureData = fromHexString(signature);
+			
+			// Append signature data to signatures data
+			signaturesData.insert(signaturesData.cend(), signatureData.cbegin(), signatureData.cend());
+			
+			// Append signature data's size to signatures sizes
+			signaturesSizes[i] = signatureData.size();
+		}
+		
+		// Get data from public nonce total
+		const vector<uint8_t> publicNonceTotalData = fromHexString(publicNonceTotal);
+		
+		// Resolve adding single-signer signatures
+		resolve(toHexString(addSingleSignerSignatures(signaturesData.data(), signaturesSizes, numberOfSignatures, publicNonceTotalData.data(), publicNonceTotalData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Verify single-signer signature
+RCT_EXPORT_METHOD(verifySingleSignerSignature:(nonnull NSString *)signature
+	withMessage:(nonnull NSString *)message
+	withPublicNonce:(NSString *)publicNonce
+	withPublicKey:(nonnull NSString *)publicKey
+	withPublicKeyTotal:(nonnull NSString *)publicKeyTotal
+	withIsPartial:(nonnull NSNumber *)isPartial
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from signature
+		const vector<uint8_t> signatureData = fromHexString(signature);
+		
+		// Get data from message
+		const vector<uint8_t> messageData = fromHexString(message);
+		
+		// Get data from public nonce
+		const vector<uint8_t> publicNonceData = publicNonce ? fromHexString(publicNonce) : vector<uint8_t>();
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+		
+		// Get data from public key total
+		const vector<uint8_t> publicKeyTotalData = fromHexString(publicKeyTotal);
+
+		// Return if single-signer signature is verified
+		resolve(toBool(verifySingleSignerSignature(signatureData.data(), signatureData.size(), messageData.data(), messageData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicKeyTotalData.data(), publicKeyTotalData.size(), fromBool(isPartial))));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Single-signer signature from data
+RCT_EXPORT_METHOD(singleSignerSignatureFromData:(nonnull NSString *)data
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from data
+		const vector<uint8_t> dataData = fromHexString(data);
+
+		// Resolve getting single-signer signature from data
+		resolve(toHexString(singleSignerSignatureFromData(dataData.data(), dataData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Compact single-signer signature
+RCT_EXPORT_METHOD(compactSingleSignerSignature:(nonnull NSString *)signature
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from signature
+		const vector<uint8_t> signatureData = fromHexString(signature);
+
+		// Resolve compacting single-signer signature
+		resolve(toHexString(compactSingleSignerSignature(signatureData.data(), signatureData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Uncompact single-signer signature
+RCT_EXPORT_METHOD(uncompactSingleSignerSignature:(nonnull NSString *)signature
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from signature
+		const vector<uint8_t> signatureData = fromHexString(signature);
+
+		// Resolve uncompacting single-signer signature
+		resolve(toHexString(uncompactSingleSignerSignature(signatureData.data(), signatureData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Combine public keys
+RCT_EXPORT_METHOD(combinePublicKeys:(nonnull NSArray *)publicKeys
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get number of public keys
+		const NSUInteger numberOfPublicKeys = [publicKeys count];
+	
+		// Initialize public keys data and public keys sizes
+		vector<uint8_t> publicKeysData;
+		size_t publicKeysSizes[numberOfPublicKeys];
+		
+		// Go through all public keys
+		for(const NSString *publicKey in publicKeys) {
+		
+			// Get data from public key
+			const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+			
+			// Append public key data to public keys data
+			publicKeysData.insert(publicKeysData.cend(), publicKeyData.cbegin(), publicKeyData.cend());
+			
+			// Append public key data's size to public keys sizes
+			publicKeysSizes[i] = publicKeyData.size();
+		}
+		
+		// Resolve combining public keys
+		resolve(toHexString(combinePublicKeys(publicKeysData.data(), publicKeysSizes, numberOfPublicKeys)));
 	}
 
 	// Catch errors
@@ -263,6 +1212,13 @@ uint8_t characterToNumber(char character) {
 			// Throw error
 			throw runtime_error("Getting character as a number failed");
 	}
+}
+
+// From bool
+bool fromBool(const NSNumber *input) {
+
+	// Return input as a bool
+	return [input boolValue] == YES;
 }
 
 // To bool

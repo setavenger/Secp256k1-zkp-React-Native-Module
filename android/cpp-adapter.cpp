@@ -110,8 +110,13 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSum(JNIEnv
 		// Go through all positive blinds
 		for(jsize i = 0; i < numberOfPositiveBlinds; ++i) {
 		
-			// Get blind
+			// Check if getting blind failed
 			const jstring blind = reinterpret_cast<jstring>(environment->GetObjectArrayElement(positiveBlinds, i));
+			if(!blind) {
+			
+				// Throw error
+				throw runtime_error("Getting blind failed");
+			}
 			
 			// Get data from blind
 			const vector<uint8_t> blindData = fromHexString(environment, blind);
@@ -133,8 +138,13 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSum(JNIEnv
 		// Go through all negative blinds
 		for(jsize i = 0; i < numberOfNegativeBlinds; ++i) {
 		
-			// Get blind
+			// Check if getting blind failed
 			const jstring blind = reinterpret_cast<jstring>(environment->GetObjectArrayElement(negativeBlinds, i));
+			if(!blind) {
+			
+				// Throw error
+				throw runtime_error("Getting blind failed");
+			}
 			
 			// Get data from blind
 			const vector<uint8_t> blindData = fromHexString(environment, blind);
@@ -356,20 +366,20 @@ jobjectArray Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeRewindBull
 		// Performing rewind bulletproof
 		const tuple<string, vector<uint8_t>, vector<uint8_t>> bulletproofData = rewindBulletproof(proofData.data(), proofData.size(), commitData.data(), commitData.size(), nonceData.data(), nonceData.size());
 		
-		// Check if creating result failed
-		jobjectArray result = environment->NewObjectArray(3, environment->FindClass("java/lang/String"), nullptr);
-		if(!result) {
-		
-			// Throw error
-			throw runtime_error("Creating result failed");
-		}
-		
 		// Check if getting value as a string failed
 		const jstring valueString = environment->NewStringUTF(get<0>(bulletproofData).c_str());
 		if(!valueString) {
 		
 			// Throw error
 			throw runtime_error("Getting value as a string failed");
+		}
+		
+		// Check if creating result failed
+		jobjectArray result = environment->NewObjectArray(3, environment->FindClass("java/lang/String"), nullptr);
+		if(!result) {
+		
+			// Throw error
+			throw runtime_error("Creating result failed");
 		}
 		
 		// Set bulletproof data in the result
@@ -517,8 +527,13 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePedersenCommitS
 		// Go through all positive commits
 		for(jsize i = 0; i < numberOfPositiveCommits; ++i) {
 		
-			// Get commit
+			// Check if getting commit failed
 			const jstring commit = reinterpret_cast<jstring>(environment->GetObjectArrayElement(positiveCommits, i));
+			if(!commit) {
+			
+				// Throw error
+				throw runtime_error("Getting commit failed");
+			}
 			
 			// Get data from commit
 			const vector<uint8_t> commitData = fromHexString(environment, commit);
@@ -540,8 +555,13 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePedersenCommitS
 		// Go through all negative commits
 		for(jsize i = 0; i < numberOfNegativeCommits; ++i) {
 		
-			// Get commit
+			// Check if getting commit failed
 			const jstring commit = reinterpret_cast<jstring>(environment->GetObjectArrayElement(negativeCommits, i));
+			if(!commit) {
+			
+				// Throw error
+				throw runtime_error("Getting commit failed");
+			}
 			
 			// Get data from commit
 			const vector<uint8_t> commitData = fromHexString(environment, commit);
@@ -644,8 +664,13 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeAddSingleSigner
 		// Go through all signatures
 		for(jsize i = 0; i < numberOfSignatures; ++i) {
 		
-			// Get signature
+			// Check if getting signature failed
 			const jstring signature = reinterpret_cast<jstring>(environment->GetObjectArrayElement(signatures, i));
+			if(!signature) {
+			
+				// Throw error
+				throw runtime_error("Getting signature failed");
+			}
 			
 			// Get data from signature
 			const vector<uint8_t> signatureData = fromHexString(environment, signature);
@@ -819,8 +844,13 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCombinePublicKe
 		// Go through all public keys
 		for(jsize i = 0; i < numberOfPublicKeys; ++i) {
 		
-			// Get public key
+			// Check if getting public key failed
 			const jstring publicKey = reinterpret_cast<jstring>(environment->GetObjectArrayElement(publicKeys, i));
+			if(!publicKey) {
+			
+				// Throw error
+				throw runtime_error("Getting public key failed");
+			}
 			
 			// Get data from public key
 			const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);

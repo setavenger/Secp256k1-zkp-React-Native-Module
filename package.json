@@ -1,6 +1,6 @@
 {
 	"name": "@nicolasflamel/secp256k1-zkp-react",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"description": "React Native module for parts of libsecp256k1-zkp",
 	"react-native": "src/index",
 	"source": "src/index",
