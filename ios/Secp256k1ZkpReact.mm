@@ -61,6 +61,7 @@ RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
 		size_t positiveBlindsSizes[numberOfPositiveBlinds];
 		
 		// Go through all positive blinds
+		size_t i = 0;
 		for(const NSString *blind in positiveBlinds) {
 		
 			// Get data from blind
@@ -71,6 +72,9 @@ RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
 			
 			// Append blind data's size to positive blinds sizes
 			positiveBlindsSizes[i] = blindData.size();
+			
+			// Increment index
+			++i;
 		}
 		
 		// Get number of negative blinds
@@ -81,6 +85,7 @@ RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
 		size_t negativeBlindsSizes[numberOfNegativeBlinds];
 		
 		// Go through all negative blinds
+		i = 0;
 		for(const NSString *blind in negativeBlinds) {
 		
 			// Get data from blind
@@ -91,6 +96,9 @@ RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
 			
 			// Append blind data's size to negative blinds sizes
 			negativeBlindsSizes[i] = blindData.size();
+			
+			// Increment index
+			++i;
 		}
 		
 		//Resolve performing blind sum
@@ -392,7 +400,7 @@ RCT_EXPORT_METHOD(rewindBulletproof:(nonnull NSString *)proof
 		}
 		
 		// Check if creating result failed
-		const NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:@"Value", valueString, @"Blind", toHexString(get<1>(bulletproofData)), @"Message", toHexString(get<2>(bulletproofData)), nil];
+		const NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:valueString, @"Value", toHexString(get<1>(bulletproofData)), @"Blind", toHexString(get<2>(bulletproofData)), @"Message", nil];
 		if(!result) {
 		
 			// Throw error
@@ -569,7 +577,7 @@ RCT_EXPORT_METHOD(pedersenCommit:(nonnull NSString *)blind
 }
 
 // Pedersen commit sum
-RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSSArray *)positiveCommits
+RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSArray *)positiveCommits
 	withNegativeCommits:(nonnull NSArray *)negativeCommits
 	withResolver:(RCTPromiseResolveBlock)resolve
 	withReject:(RCTPromiseRejectBlock)reject)
@@ -586,6 +594,7 @@ RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSSArray *)positiveCommits
 		size_t positiveCommitsSizes[numberOfPositiveCommits];
 		
 		// Go through all positive commits
+		size_t i = 0;
 		for(const NSString *commit in positiveCommits) {
 		
 			// Get data from commit
@@ -596,6 +605,9 @@ RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSSArray *)positiveCommits
 			
 			// Append commit data's size to positive commits sizes
 			positiveCommitsSizes[i] = commitData.size();
+			
+			// Increment index
+			++i;
 		}
 		
 		// Get number of negative commits
@@ -606,6 +618,7 @@ RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSSArray *)positiveCommits
 		size_t negativeCommitsSizes[numberOfNegativeCommits];
 		
 		// Go through all negative commits
+		i = 0;
 		for(const NSString *commit in negativeCommits) {
 		
 			// Get data from commit
@@ -616,6 +629,9 @@ RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSSArray *)positiveCommits
 			
 			// Append commit data's size to negative commits sizes
 			negativeCommitsSizes[i] = commitData.size();
+			
+			// Increment index
+			++i;
 		}
 		
 		// Resolve performing Pedersen commit sum
@@ -747,6 +763,7 @@ RCT_EXPORT_METHOD(addSingleSignerSignatures:(nonnull NSArray *)signatures
 		size_t signaturesSizes[numberOfSignatures];
 		
 		// Go through all signatures
+		size_t i = 0;
 		for(const NSString *signature in signatures) {
 		
 			// Get data from signature
@@ -757,6 +774,9 @@ RCT_EXPORT_METHOD(addSingleSignerSignatures:(nonnull NSArray *)signatures
 			
 			// Append signature data's size to signatures sizes
 			signaturesSizes[i] = signatureData.size();
+			
+			// Increment index
+			++i;
 		}
 		
 		// Get data from public nonce total
@@ -989,6 +1009,7 @@ RCT_EXPORT_METHOD(combinePublicKeys:(nonnull NSArray *)publicKeys
 		size_t publicKeysSizes[numberOfPublicKeys];
 		
 		// Go through all public keys
+		size_t i = 0;
 		for(const NSString *publicKey in publicKeys) {
 		
 			// Get data from public key
@@ -999,6 +1020,9 @@ RCT_EXPORT_METHOD(combinePublicKeys:(nonnull NSArray *)publicKeys
 			
 			// Append public key data's size to public keys sizes
 			publicKeysSizes[i] = publicKeyData.size();
+			
+			// Increment index
+			++i;
 		}
 		
 		// Resolve combining public keys
