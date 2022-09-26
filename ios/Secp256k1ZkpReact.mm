@@ -1,6 +1,7 @@
 // Header files
 #import <Foundation/Foundation.h>
 #import <iomanip>
+#import <Security/Security.h>
 #import <sstream>
 #import "secp256k1-zkp-react.h"
 #import "./Secp256k1ZkpReact.h"
@@ -42,6 +43,56 @@ static const NSNumber *toBool(bool input);
 
 // Export module
 RCT_EXPORT_MODULE()
+
+// Blind switch
+RCT_EXPORT_METHOD(blindSwitch:(nonnull NSString *)blind
+	withValue:(nonnull NSString *)value
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from blind
+		const vector<uint8_t> blindData = fromHexString(blind);
+		
+		// Check if getting data from value failed
+		const char *valueData = [value UTF8String];
+		if(!valueData) {
+
+			// Throw error
+			throw runtime_error("Getting data from value failed");
+		}
+		
+		// Resolve performing blind switch
+		resolve(toHexString(blindSwitch(blindData.data(), blindData.size(), valueData)));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
 
 // Blind sum
 RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
@@ -294,6 +345,72 @@ RCT_EXPORT_METHOD(isValidSingleSignerSignature:(nonnull NSString *)signature
 	}
 }
 
+// Create bulletproof
+RCT_EXPORT_METHOD(createBulletproof:(nonnull NSString *)blind
+	withValue:(nonnull NSString *)value
+	withNonce:(nonnull NSString *)nonce
+	withPrivateNonce:(nonnull NSString *)privateNonce
+	withExtraCommit:(nonnull NSString *)extraCommit
+	withMessage:(nonnull NSString *)message
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from blind
+		const vector<uint8_t> blindData = fromHexString(blind);
+		
+		// Check if getting data from value failed
+		const char *valueData = [value UTF8String];
+		if(!valueData) {
+
+			// Throw error
+			throw runtime_error("Getting data from value failed");
+		}
+		
+		// Get data from nonce
+		const vector<uint8_t> nonceData = fromHexString(nonce);
+		
+		// Get data from private nonce
+		const vector<uint8_t> privateNonceData = fromHexString(privateNonce);
+		
+		// Get data from extra commit
+		const vector<uint8_t> extraCommitData = fromHexString(extraCommit);
+		
+		// Get data from message
+		const vector<uint8_t> messageData = fromHexString(message);
+
+		// Resolve creating bulletproof
+		resolve(toHexString(createBulletproof(blindData.data(), blindData.size(), valueData, nonceData.data(), nonceData.size(), privateNonceData.data(), privateNonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
 // Create bulletproof blindless
 RCT_EXPORT_METHOD(createBulletproofBlindless:(nonnull NSString *)tauX
 	withTOne:(nonnull NSString *)tOne
@@ -485,6 +602,47 @@ RCT_EXPORT_METHOD(verifyBulletproof:(nonnull NSString *)proof
 	}
 }
 
+// Public key from secret key
+RCT_EXPORT_METHOD(publicKeyFromSecretKey:(nonnull NSString *)secretKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
+
+		// Resolve getting public key from secret key
+		resolve(toHexString(publicKeyFromSecretKey(secretKeyData.data(), secretKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
 // Public key from data
 RCT_EXPORT_METHOD(publicKeyFromData:(nonnull NSString *)data
 	withResolver:(RCTPromiseResolveBlock)resolve
@@ -499,6 +657,272 @@ RCT_EXPORT_METHOD(publicKeyFromData:(nonnull NSString *)data
 
 		// Resolve getting public key from data
 		resolve(toHexString(publicKeyFromData(dataData.data(), dataData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Uncompress public key
+RCT_EXPORT_METHOD(uncompressPublicKey:(nonnull NSString *)publicKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+
+		// Resolve uncompressing the public key
+		resolve(toHexString(uncompressPublicKey(publicKeyData.data(), publicKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Secret key tweak add
+RCT_EXPORT_METHOD(secretKeyTweakAdd:(nonnull NSString *)secretKey
+	withTweak:(nonnull NSString *)tweak
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(tweak);
+
+		// Resolve performing secret key tweak add
+		resolve(toHexString(secretKeyTweakAdd(secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Public key tweak add
+RCT_EXPORT_METHOD(publicKeyTweakAdd:(nonnull NSString *)publicKey
+	withTweak:(nonnull NSString *)tweak
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(tweak);
+
+		// Resolve performing public key tweak add
+		resolve(toHexString(publicKeyTweakAdd(publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Secret key tweak multiply
+RCT_EXPORT_METHOD(secretKeyTweakMultiply:(nonnull NSString *)secretKey
+	withTweak:(nonnull NSString *)tweak
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(tweak);
+
+		// Resolve performing secret key tweak multiply
+		resolve(toHexString(secretKeyTweakMultiply(secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Public key tweak multiply
+RCT_EXPORT_METHOD(publicKeyTweakMultiply:(nonnull NSString *)publicKey
+	withTweak:(nonnull NSString *)tweak
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(tweak);
+
+		// Resolve performing public key tweak multiply
+		resolve(toHexString(publicKeyTweakMultiply(publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Shared secret key from secret key and public key
+RCT_EXPORT_METHOD(sharedSecretKeyFromSecretKeyAndPublicKey:(nonnull NSString *)secretKey
+	withPublicKey:(nonnull NSString *)publicKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+		
+		// Resolve getting shared secret key from secret key and public key
+		resolve(toHexString(sharedSecretKeyFromSecretKeyAndPublicKey(secretKeyData.data(), secretKeyData.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors
@@ -718,6 +1142,75 @@ RCT_EXPORT_METHOD(publicKeyToPedersenCommit:(nonnull NSString *)publicKey
 
 		// Resolve getting Pedersen commit from public key
 		resolve(toHexString(publicKeyToPedersenCommit(publicKeyData.data(), publicKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Create single-signer signature
+RCT_EXPORT_METHOD(createSingleSignerSignature:(nonnull NSString *)message
+	withSecretKey:(nonnull NSString *)secretKey
+	withSecretNonce:(NSString *)secretNonce
+	withPublicKey:(nonnull NSString *)publicKey
+	withPublicNonce:(NSString *)publicNonce
+	withPublicNonceTotal:(NSString *)publicNonceTotal
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from message
+		const vector<uint8_t> messageData = fromHexString(message);
+		
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
+		
+		// Get data from secret nonce
+		const vector<uint8_t> secretNonceData = secretNonce ? fromHexString(secretNonce) : vector<uint8_t>();
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+		
+		// Get data from public nonce
+		const vector<uint8_t> publicNonceData = publicNonce ? fromHexString(publicNonce) : vector<uint8_t>();
+		
+		// Get data from public nonce total
+		const vector<uint8_t> publicNonceTotalData = publicNonceTotal ? fromHexString(publicNonceTotal) : vector<uint8_t>();
+		
+		// Check if creating random seed failed
+		vector<uint8_t> seed(seedSize());
+		if(SecRandomCopyBytes(kSecRandomDefault, seed.size(), seed.data()) != errSecSuccess) {
+		
+			// Throw error
+			throw runtime_error("Creating random seed failed");
+		}
+
+		// Resolve creating single-signer signature
+		resolve(toHexString(createSingleSignerSignature(messageData.data(), messageData.size(), secretKeyData.data(), secretKeyData.size(), secretNonce ? secretNonceData.data() : nullptr, secretNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicNonceTotal ? publicNonceTotalData.data() : nullptr, publicNonceTotalData.size(), seed.data(), seed.size())));
 	}
 
 	// Catch errors
@@ -1027,6 +1520,145 @@ RCT_EXPORT_METHOD(combinePublicKeys:(nonnull NSArray *)publicKeys
 		
 		// Resolve combining public keys
 		resolve(toHexString(combinePublicKeys(publicKeysData.data(), publicKeysSizes, numberOfPublicKeys)));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Create secret nonce
+RCT_EXPORT_METHOD(createSecretNonce:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Check if creating random seed failed
+		vector<uint8_t> seed(seedSize());
+		if(SecRandomCopyBytes(kSecRandomDefault, seed.size(), seed.data()) != errSecSuccess) {
+		
+			// Throw error
+			throw runtime_error("Creating random seed failed");
+		}
+		
+		// Resolve creating secure nonce
+		resolve(toHexString(createSecretNonce(seed.data(), seed.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Native create message hash signature
+RCT_EXPORT_METHOD(createMessageHashSignature:(nonnull NSString *)messageHash
+	withSecretKey:(nonnull NSString *)secretKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from message hash
+		const vector<uint8_t> messageHashData = fromHexString(messageHash);
+		
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
+
+		// Resolve creating message hash signature
+		resolve(toHexString(createMessageHashSignature(messageHashData.data(), messageHashData.size(), secretKeyData.data(), secretKeyData.size())));
+	}
+
+	// Catch errors
+	catch(const exception &error) {
+
+		// Initialize message
+		NSString *message;
+
+		// Try
+		try {
+
+			// Set message to error's message
+			message = [NSString stringWithUTF8String:error.what()];
+		}
+
+		// Catch errors
+		catch(...) {
+
+			// Set error to nothing
+			message = nullptr;
+		}
+
+		// Reject error
+		reject(@"Error", message ? message : @"", nil);
+	}
+}
+
+// Verify message hash signature
+RCT_EXPORT_METHOD(verifyMessageHashSignature:(nonnull NSString *)signature
+	withMessage:(nonnull NSString *)messageHash
+	withPublicKey:(nonnull NSString *)publicKey
+	withResolver:(RCTPromiseResolveBlock)resolve
+	withReject:(RCTPromiseRejectBlock)reject)
+{
+
+	// Try
+	try {
+	
+		// Get data from signature
+		const vector<uint8_t> signatureData = fromHexString(signature);
+		
+		// Get data from message hash
+		const vector<uint8_t> messageHashData = fromHexString(messageHash);
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
+
+		// Resolve if message hash signature is verified
+		resolve(toBool(verifyMessageHashSignature(signatureData.data(), signatureData.size(), messageHashData.data(), messageHashData.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors

@@ -31,6 +31,29 @@ export default class Secp256k1Zkp {
 	// No public nonce total
 	public static readonly NO_PUBLIC_NONCE_TOTAL = null;
 	
+	// Blind switch
+	static async blindSwitch(
+		blind: Buffer,
+		value: string
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return performing blind switch with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.blindSwitch(blind.toString("hex"), value), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
 	// Blind sum
 	static async blindSum(
 		positiveBlinds: Buffer[],
@@ -151,6 +174,33 @@ export default class Secp256k1Zkp {
 		}
 	}
 	
+	// Create bulletproof
+	static async createBulletproof(
+		blind: Buffer,
+		value: string,
+		nonce: Buffer,
+		privateNonce: Buffer,
+		extraCommit: Buffer,
+		message: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return getting bulletproof with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.createBulletproof(blind.toString("hex"), value, nonce.toString("hex"), privateNonce.toString("hex"), extraCommit.toString("hex"), message.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
 	// Create bulletproof blindless
 	static async createBulletproofBlindless(
 		tauX: Buffer,
@@ -245,6 +295,28 @@ export default class Secp256k1Zkp {
 		}
 	}
 	
+	// Public key from secret key
+	static async publicKeyFromSecretKey(
+		secretKey: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return getting public key from secret key with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.publicKeyFromSecretKey(secretKey.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
 	// Public key from data
 	static async publicKeyFromData(
 		data: Buffer
@@ -255,6 +327,143 @@ export default class Secp256k1Zkp {
 	
 			// Return getting public key from data with secp256k1-zkp React module
 			return Buffer.from(await NativeModules.Secp256k1ZkpReact.publicKeyFromData(data.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Uncompress public key
+	static async uncompressPublicKey(
+		publicKey: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return uncompressing public key with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.uncompressPublicKey(publicKey.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Secret key tweak add
+	static async secretKeyTweakAdd(
+		secretKey: Buffer,
+		tweak: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return performing secret key tweak add with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.secretKeyTweakAdd(secretKey.toString("hex"), tweak.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Public key tweak add
+	static async publicKeyTweakAdd(
+		publicKey: Buffer,
+		tweak: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return performing public key tweak add with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.publicKeyTweakAdd(publicKey.toString("hex"), tweak.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Secret key tweak multiply
+	static async secretKeyTweakMultiply(
+		secretKey: Buffer,
+		tweak: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return performing secret key tweak multiply with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.secretKeyTweakMultiply(secretKey.toString("hex"), tweak.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Public key tweak multiply
+	static async publicKeyTweakMultiply(
+		publicKey: Buffer,
+		tweak: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return performing public key tweak multiply with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.publicKeyTweakMultiply(publicKey.toString("hex"), tweak.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Shared secret key from secret key and public key
+	static async sharedSecretKeyFromSecretKeyAndPublicKey(
+		secretKey: Buffer,
+		publicKey: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return getting shared secret key from secret key and public key with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.sharedSecretKeyFromSecretKeyAndPublicKey(secretKey.toString("hex"), publicKey.toString("hex")), "hex");
 		}
 		
 		// Catch errors
@@ -354,6 +563,33 @@ export default class Secp256k1Zkp {
 	
 			// Return getting Pedersen commit from public key with secp256k1-zkp React module
 			return Buffer.from(await NativeModules.Secp256k1ZkpReact.publicKeyToPedersenCommit(publicKey.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Create single-signer signature
+	static async createSingleSignerSignature(
+		message: Buffer,
+		secretKey: Buffer,
+		secretNonce: Buffer | null,
+		publicKey: Buffer,
+		publicNonce: Buffer | null,
+		publicNonceTotal: Buffer | null
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return getting single-signer signature with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.createSingleSignerSignature(message.toString("hex"), secretKey.toString("hex"), (secretNonce !== null) ? secretNonce.toString("hex") : null, publicKey.toString("hex"), (publicNonce !== null) ? publicNonce.toString("hex") : null, (publicNonceTotal !== null) ? publicNonceTotal.toString("hex") : null), "hex");
 		}
 		
 		// Catch errors
@@ -502,6 +738,73 @@ export default class Secp256k1Zkp {
 				return publicKey.toString("hex");
 				
 			})), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Create secret nonce
+	static async createSecretNonce(): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return getting secret nonce with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.createSecretNonce(), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Create message hash signature
+	static async createMessageHashSignature(
+		messageHash: Buffer,
+		secretKey: Buffer
+	): Promise<Buffer | null> {
+	
+		// Try
+		try {
+	
+			// Return getting message hash signature with secp256k1-zkp React module
+			return Buffer.from(await NativeModules.Secp256k1ZkpReact.createMessageHashSignature(messageHash.toString("hex"), secretKey.toString("hex")), "hex");
+		}
+		
+		// Catch errors
+		catch(
+			error: any
+		) {
+		
+			// Return operation failed
+			return Secp256k1Zkp.OPERATION_FAILED;
+		}
+	}
+	
+	// Verify message hash signature
+	static async verifyMessageHashSignature(
+		signature: Buffer,
+		messageHash: Buffer,
+		publicKey: Buffer
+	): Promise<boolean | null> {
+	
+		// Try
+		try {
+	
+			// Return if message hash signature is verified with secp256k1-zkp React module
+			return await NativeModules.Secp256k1ZkpReact.verifyMessageHashSignature(signature.toString("hex"), messageHash.toString("hex"), publicKey.toString("hex"));
 		}
 		
 		// Catch errors

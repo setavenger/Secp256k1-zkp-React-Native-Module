@@ -19,6 +19,9 @@ static const int BITS_IN_A_BYTE = 8;
 
 // Function prototypes
 
+// Native blind switch
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSwitch(JNIEnv *environment, jclass type, jstring blind, jstring value);
+
 // Native blind sum
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSum(JNIEnv *environment, jclass type, jobjectArray positiveBlinds, jobjectArray negativeBlinds);
 
@@ -34,6 +37,9 @@ extern "C" JNIEXPORT jboolean JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpRea
 // Native is valid single-signer signature
 extern "C" JNIEXPORT jboolean JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeIsValidSingleSignerSignature(JNIEnv *environment, jclass type, jstring signature);
 
+// Native create bulletproof
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateBulletproof(JNIEnv *environment, jclass type, jstring blind, jstring value, jstring nonce, jstring privateNonce, jstring extraCommit, jstring message);
+
 // Native create bulletproof blindless
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateBulletproofBlindless(JNIEnv *environment, jclass type, jstring tauX, jstring tOne, jstring tTwo, jstring commit, jstring value, jstring nonce, jstring extraCommit, jstring message);
 
@@ -43,8 +49,29 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_com_secp256k1zkpreact_Secp256k1Zk
 // Native verify bulletproof
 extern "C" JNIEXPORT jboolean JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeVerifyBulletproof(JNIEnv *environment, jclass type, jstring proof, jstring commit, jstring extraCommit);
 
+// Native public key from secret key
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyFromSecretKey(JNIEnv *environment, jclass type, jstring secretKey);
+
 // Native public key from data
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyFromData(JNIEnv *environment, jclass type, jstring data);
+
+// Native uncompress public key
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeUncompressPublicKey(JNIEnv *environment, jclass type, jstring publicKey);
+
+// Native secret key tweak add
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSecretKeyTweakAdd(JNIEnv *environment, jclass type, jstring secretKey, jstring tweak);
+
+// Native public key tweak add
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyTweakAdd(JNIEnv *environment, jclass type, jstring publicKey, jstring tweak);
+
+// Native secret key tweak multiply
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSecretKeyTweakMultiply(JNIEnv *environment, jclass type, jstring secretKey, jstring tweak);
+
+// Native public key tweak multiply
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyTweakMultiply(JNIEnv *environment, jclass type, jstring publicKey, jstring tweak);
+
+// Native shared secret key from secret key and public key
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSharedSecretKeyFromSecretKeyAndPublicKey(JNIEnv *environment, jclass type, jstring secretKey, jstring publicKey);
 
 // Native Pedersen commit
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePedersenCommit(JNIEnv *environment, jclass type, jstring blind, jstring value);
@@ -57,6 +84,9 @@ extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReac
 
 // Native public key to Pedersen commit
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyToPedersenCommit(JNIEnv *environment, jclass type, jstring publicKey);
+
+// Native create single-signer signature
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateSingleSignerSignature(JNIEnv *environment, jclass type, jstring message, jstring secretKey, jstring secretNonce, jstring publicKey, jstring publicNonce, jstring publicNonceTotal, jstring seed);
 
 // Native add single-signer signatures
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeAddSingleSignerSignatures(JNIEnv *environment, jclass type, jobjectArray signatures, jstring publicNonceTotal);
@@ -76,6 +106,18 @@ extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReac
 // Native combine public keys
 extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCombinePublicKeys(JNIEnv *environment, jclass type, jobjectArray publicKeys);
 
+// Native create secret nonce
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateSecretNonce(JNIEnv *environment, jclass type, jstring seed);
+
+// Native create message hash signature
+extern "C" JNIEXPORT jstring JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateMessageHashSignature(JNIEnv *environment, jclass type, jstring messageHash, jstring secretKey);
+
+// Native verify message hash signature
+extern "C" JNIEXPORT jboolean JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeVerifyMessageHashSignature(JNIEnv *environment, jclass type, jstring signature, jstring messageHash, jstring publicKey);
+
+// Native seed size
+extern "C" JNIEXPORT jint JNICALL Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSeedSize(JNIEnv *environment, jclass type);
+
 // From hex string
 static vector<uint8_t> fromHexString(JNIEnv *environment, jstring hexString);
 
@@ -93,6 +135,49 @@ static jboolean toBool(bool input);
 
 
 // Supporting function implementation
+
+// Native blind switch
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSwitch(JNIEnv *environment, jclass type, jstring blind, jstring value) {
+
+	// Try
+	try {
+	
+		// Get data from blind
+		const vector<uint8_t> blindData = fromHexString(environment, blind);
+		
+		// Initialize release value data
+		auto releaseValueData = [environment, value](const char *valueData) {
+		
+			// Release value data
+			environment->ReleaseStringUTFChars(value, valueData);
+		};
+
+		// Check if getting data from value failed
+		const unique_ptr<const char,  decltype(releaseValueData)> valueData(environment->GetStringUTFChars(value, nullptr), releaseValueData);
+		if(!valueData) {
+		
+			// Throw error
+			throw runtime_error("Getting data from value failed");
+		}
+		
+		// Return performing blind switch
+		return toHexString(environment, blindSwitch(blindData.data(), blindData.size(), valueData.get()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
 
 // Native blind sum
 jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSum(JNIEnv *environment, jclass type, jobjectArray positiveBlinds, jobjectArray negativeBlinds) {
@@ -170,8 +255,8 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeBlindSum(JNIEnv
 			exit(0);
 		}
 		
-		// Return false
-		return JNI_FALSE;
+		// Return nothing
+		return nullptr;
 	}
 }
 
@@ -284,6 +369,61 @@ jboolean Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeIsValidSingleS
 		
 		// Return false
 		return JNI_FALSE;
+	}
+}
+
+// Native create bulletproof
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateBulletproof(JNIEnv *environment, jclass type, jstring blind, jstring value, jstring nonce, jstring privateNonce, jstring extraCommit, jstring message) {
+
+	// Try
+	try {
+	
+		// Get data from blind
+		const vector<uint8_t> blindData = fromHexString(environment, blind);
+		
+		// Initialize release value data
+		auto releaseValueData = [environment, value](const char *valueData) {
+		
+			// Release value data
+			environment->ReleaseStringUTFChars(value, valueData);
+		};
+
+		// Check if getting data from value failed
+		const unique_ptr<const char,  decltype(releaseValueData)> valueData(environment->GetStringUTFChars(value, nullptr), releaseValueData);
+		if(!valueData) {
+		
+			// Throw error
+			throw runtime_error("Getting data from value failed");
+		}
+		
+		// Get data from nonce
+		const vector<uint8_t> nonceData = fromHexString(environment, nonce);
+		
+		// Get data from private nonce
+		const vector<uint8_t> privateNonceData = fromHexString(environment, privateNonce);
+		
+		// Get data from extra commit
+		const vector<uint8_t> extraCommitData = fromHexString(environment, extraCommit);
+		
+		// Get data from message
+		const vector<uint8_t> messageData = fromHexString(environment, message);
+		
+		// Return creating bulletproof
+		return toHexString(environment, createBulletproof(blindData.data(), blindData.size(), valueData.get(), nonceData.data(), nonceData.size(), privateNonceData.data(), privateNonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
 	}
 }
 
@@ -440,6 +580,35 @@ jboolean Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeVerifyBulletpr
 	}
 }
 
+// Native public key from secret key
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyFromSecretKey(JNIEnv *environment, jclass type, jstring secretKey) {
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
+
+		// Return getting public key from secret key
+		return toHexString(environment, publicKeyFromSecretKey(secretKeyData.data(), secretKeyData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+
 // Native public key from data
 jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyFromData(JNIEnv *environment, jclass type, jstring data) {
 
@@ -451,6 +620,189 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyFromDa
 
 		// Return getting public key from data
 		return toHexString(environment, publicKeyFromData(dataData.data(), dataData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Uncompress public key
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeUncompressPublicKey(JNIEnv *environment, jclass type, jstring publicKey) {
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);
+
+		// Return uncompressing the public key
+		return toHexString(environment, uncompressPublicKey(publicKeyData.data(), publicKeyData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native secret key tweak add
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSecretKeyTweakAdd(JNIEnv *environment, jclass type, jstring secretKey, jstring tweak) {
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(environment, tweak);
+
+		// Return performing secret key tweak add
+		return toHexString(environment, secretKeyTweakAdd(secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native public key tweak add
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyTweakAdd(JNIEnv *environment, jclass type, jstring publicKey, jstring tweak) {
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(environment, tweak);
+
+		// Return performing public key tweak add
+		return toHexString(environment, publicKeyTweakAdd(publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native secret key tweak multiply
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSecretKeyTweakMultiply(JNIEnv *environment, jclass type, jstring secretKey, jstring tweak) {
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(environment, tweak);
+
+		// Return performing secret key tweak multiply
+		return toHexString(environment, secretKeyTweakMultiply(secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native public key tweak multiply
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyTweakMultiply(JNIEnv *environment, jclass type, jstring publicKey, jstring tweak) {
+
+	// Try
+	try {
+	
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);
+		
+		// Get data from tweak
+		const vector<uint8_t> tweakData = fromHexString(environment, tweak);
+
+		// Return performing public key tweak multiply
+		return toHexString(environment, publicKeyTweakMultiply(publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native shared secret key from secret key and public key
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSharedSecretKeyFromSecretKeyAndPublicKey(JNIEnv *environment, jclass type, jstring secretKey, jstring publicKey) {
+
+	// Try
+	try {
+	
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);
+		
+		// Return getting shared secret key from secret key and public key
+		return toHexString(environment, sharedSecretKeyFromSecretKeyAndPublicKey(secretKeyData.data(), secretKeyData.size(), publicKeyData.data(), publicKeyData.size()));
 	}
 	
 	// Catch errors
@@ -587,8 +939,8 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePedersenCommitS
 			exit(0);
 		}
 		
-		// Return false
-		return JNI_FALSE;
+		// Return nothing
+		return nullptr;
 	}
 }
 
@@ -631,6 +983,52 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativePublicKeyToPede
 
 		// Return getting Pedersen commit from public key
 		return toHexString(environment, publicKeyToPedersenCommit(publicKeyData.data(), publicKeyData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native create single-signer signature
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateSingleSignerSignature(JNIEnv *environment, jclass type, jstring message, jstring secretKey, jstring secretNonce, jstring publicKey, jstring publicNonce, jstring publicNonceTotal, jstring seed) {
+
+	// Try
+	try {
+	
+		// Get data from message
+		const vector<uint8_t> messageData = fromHexString(environment, message);
+		
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
+		
+		// Get data from secret nonce
+		const vector<uint8_t> secretNonceData = secretNonce ? fromHexString(environment, secretNonce) : vector<uint8_t>();
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);
+		
+		// Get data from public nonce
+		const vector<uint8_t> publicNonceData = publicNonce ? fromHexString(environment, publicNonce) : vector<uint8_t>();
+		
+		// Get data from public nonce total
+		const vector<uint8_t> publicNonceTotalData = publicNonceTotal ? fromHexString(environment, publicNonceTotal) : vector<uint8_t>();
+		
+		// Get data from seed
+		const vector<uint8_t> seedData = fromHexString(environment, seed);
+
+		// Return creating single-signer signature
+		return toHexString(environment, createSingleSignerSignature(messageData.data(), messageData.size(), secretKeyData.data(), secretKeyData.size(), secretNonce ? secretNonceData.data() : nullptr, secretNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicNonceTotal ? publicNonceTotalData.data() : nullptr, publicNonceTotalData.size(), seedData.data(), seedData.size()));
 	}
 	
 	// Catch errors
@@ -699,8 +1097,8 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeAddSingleSigner
 			exit(0);
 		}
 		
-		// Return false
-		return JNI_FALSE;
+		// Return nothing
+		return nullptr;
 	}
 }
 
@@ -876,8 +1274,126 @@ jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCombinePublicKe
 			exit(0);
 		}
 		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native create secret nonce
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateSecretNonce(JNIEnv *environment, jclass type, jstring seed) {
+
+	// Try
+	try {
+	
+		// Get data from seed
+		const vector<uint8_t> seedData = fromHexString(environment, seed);
+		
+		// Return creating secure nonce
+		return toHexString(environment, createSecretNonce(seedData.data(), seedData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native create message hash signature
+jstring Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeCreateMessageHashSignature(JNIEnv *environment, jclass type, jstring messageHash, jstring secretKey) {
+
+	// Try
+	try {
+	
+		// Get data from message hash
+		const vector<uint8_t> messageHashData = fromHexString(environment, messageHash);
+		
+		// Get data from secret key
+		const vector<uint8_t> secretKeyData = fromHexString(environment, secretKey);
+
+		// Return creating message hash signature
+		return toHexString(environment, createMessageHashSignature(messageHashData.data(), messageHashData.size(), secretKeyData.data(), secretKeyData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return nothing
+		return nullptr;
+	}
+}
+
+// Native verify message hash signature
+jboolean Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeVerifyMessageHashSignature(JNIEnv *environment, jclass type, jstring signature, jstring messageHash, jstring publicKey) {
+
+	// Try
+	try {
+	
+		// Get data from signature
+		const vector<uint8_t> signatureData = fromHexString(environment, signature);
+		
+		// Get data from message hash
+		const vector<uint8_t> messageHashData = fromHexString(environment, messageHash);
+		
+		// Get data from public key
+		const vector<uint8_t> publicKeyData = fromHexString(environment, publicKey);
+
+		// Return if message hash signature is verified
+		return toBool(verifyMessageHashSignature(signatureData.data(), signatureData.size(), messageHashData.data(), messageHashData.size(), publicKeyData.data(), publicKeyData.size()));
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
 		// Return false
 		return JNI_FALSE;
+	}
+}
+
+// Native seed size
+jint Java_com_secp256k1zkpreact_Secp256k1ZkpReactModule_nativeSeedSize(JNIEnv *environment, jclass type) {
+
+	// Try
+	try {
+	
+		// Return seedSize
+		return seedSize();
+	}
+	
+	// Catch errors
+	catch(const exception &error) {
+	
+		// Check if throwing error failed
+		if(environment->ThrowNew(environment->FindClass("java/lang/RuntimeException"), error.what() ? error.what() : "")) {
+		
+			// Exit
+			exit(0);
+		}
+		
+		// Return zero
+		return 0;
 	}
 }
 

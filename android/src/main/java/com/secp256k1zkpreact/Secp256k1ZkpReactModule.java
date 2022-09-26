@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
+import java.security.SecureRandom;
 
 
 // Classes
@@ -54,6 +55,25 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 	
 		// Return name
 		return NAME;
+	}
+	
+	// Blind switch
+	@ReactMethod
+	public void blindSwitch(String blind, String value, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native blind switch
+			promise.resolve(nativeBlindSwitch(blind, value));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
 	}
 	
 	// Blind sum
@@ -151,6 +171,25 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 		}
 	}
 	
+	// Create bulletproof
+	@ReactMethod
+	public void createBulletproof(String blind, String value, String nonce, String privateNonce, String extraCommit, String message, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native create bulletproof
+			promise.resolve(nativeCreateBulletproof(blind, value, nonce, privateNonce, extraCommit, message));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
 	// Create bulletproof blindless
 	@ReactMethod
 	public void createBulletproofBlindless(String tauX, String tOne, String tTwo, String commit, String value, String nonce, String extraCommit, String message, Promise promise) {
@@ -219,6 +258,25 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 		}
 	}
 	
+	// Public key from secret key
+	@ReactMethod
+	public void publicKeyFromSecretKey(String secretKey, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native public key from secret key
+			promise.resolve(nativePublicKeyFromSecretKey(secretKey));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
 	// Public key from data
 	@ReactMethod
 	public void publicKeyFromData(String data, Promise promise) {
@@ -228,6 +286,120 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 
 			// Resolve promise to native public key from data
 			promise.resolve(nativePublicKeyFromData(data));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Uncompress public key
+	@ReactMethod
+	public void uncompressPublicKey(String publicKey, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native uncompress public key
+			promise.resolve(nativeUncompressPublicKey(publicKey));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Secret key tweak add
+	@ReactMethod
+	public void secretKeyTweakAdd(String secretKey, String tweak, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native secret key tweak add
+			promise.resolve(nativeSecretKeyTweakAdd(secretKey, tweak));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Public key tweak add
+	@ReactMethod
+	public void publicKeyTweakAdd(String publicKey, String tweak, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native public key tweak add
+			promise.resolve(nativePublicKeyTweakAdd(publicKey, tweak));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Secret key tweak multiply
+	@ReactMethod
+	public void secretKeyTweakMultiply(String secretKey, String tweak, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native secret key tweak multiply
+			promise.resolve(nativeSecretKeyTweakMultiply(secretKey, tweak));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Public key tweak multiply
+	@ReactMethod
+	public void publicKeyTweakMultiply(String publicKey, String tweak, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native public key tweak multiply
+			promise.resolve(nativePublicKeyTweakMultiply(publicKey, tweak));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Shared secret key from secret key and public key
+	@ReactMethod
+	public void sharedSecretKeyFromSecretKeyAndPublicKey(String secretKey, String publicKey, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native shared secret key from secret key and public key
+			promise.resolve(nativeSharedSecretKeyFromSecretKeyAndPublicKey(secretKey, publicKey));
 		}
 
 		// Catch errors
@@ -304,6 +476,30 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 
 			// Resolve promise to native public key to Pedersen commit
 			promise.resolve(nativePublicKeyToPedersenCommit(publicKey));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Create single-signer signature
+	@ReactMethod
+	public void createSingleSignerSignature(String message, String secretKey, String secretNonce, String publicKey, String publicNonce, String publicNonceTotal, Promise promise) {
+
+		// Try
+		try {
+		
+			// Create random seed
+			SecureRandom random = new SecureRandom();
+			byte[] seed = new byte[nativeSeedSize()];
+			random.nextBytes(seed);
+
+			// Resolve promise to native create single-signer signature
+			promise.resolve(nativeCreateSingleSignerSignature(message, secretKey, secretNonce, publicKey, publicNonce, publicNonceTotal, toHexString(seed)));
 		}
 
 		// Catch errors
@@ -428,6 +624,74 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 		}
 	}
 	
+	// Create secret nonce
+	@ReactMethod
+	public void createSecretNonce(Promise promise) {
+
+		// Try
+		try {
+		
+			// Create random seed
+			SecureRandom random = new SecureRandom();
+			byte[] seed = new byte[nativeSeedSize()];
+			random.nextBytes(seed);
+
+			// Resolve promise to native create secret nonce
+			promise.resolve(nativeCreateSecretNonce(toHexString(seed)));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Create message hash signature
+	@ReactMethod
+	public void createMessageHashSignature(String messageHash, String secretKey, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native create message hash signature
+			promise.resolve(nativeCreateMessageHashSignature(messageHash, secretKey));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Verify message hash signature
+	@ReactMethod
+	public void verifyMessageHashSignature(String signature, String messageHash, String publicKey, Promise promise) {
+
+		// Try
+		try {
+
+			// Resolve promise to native verify message hash signature
+			promise.resolve(nativeVerifyMessageHashSignature(signature, messageHash, publicKey));
+		}
+
+		// Catch errors
+		catch(Exception error) {
+
+			// Reject promise
+			promise.reject("Error", error);
+		}
+	}
+	
+	// Hex character length
+	private static int HEX_CHARACTER_LENGTH = 2;
+	
+	// Native blind switch
+	private static native String nativeBlindSwitch(String blind, String value);
+	
 	// Native blind sum
 	private static native String nativeBlindSum(String[] positiveBlinds, String[] negativeBlinds);
 	
@@ -443,6 +707,9 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 	// Native is valid single-signer signature
 	private static native boolean nativeIsValidSingleSignerSignature(String signature);
 	
+	// Native create bulletproof
+	private static native String nativeCreateBulletproof(String blind, String value, String nonce, String privateNonce, String extraCommit, String message);
+	
 	// Native create bulletproof blindless
 	private static native String nativeCreateBulletproofBlindless(String tauX, String tOne, String tTwo, String commit, String value, String nonce, String extraCommit, String message);
 	
@@ -452,8 +719,29 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 	// Native verify bulletproof
 	private static native boolean nativeVerifyBulletproof(String proof, String commit, String extraCommit);
 	
+	// Native public key from secret key
+	private static native String nativePublicKeyFromSecretKey(String secretKey);
+	
 	// Native public key from data
 	private static native String nativePublicKeyFromData(String data);
+	
+	// Native uncompress public key
+	private static native String nativeUncompressPublicKey(String publicKey);
+	
+	// Native secret key tweak add
+	private static native String nativeSecretKeyTweakAdd(String secretKey, String tweak);
+	
+	// Native public key tweak add
+	private static native String nativePublicKeyTweakAdd(String publicKey, String tweak);
+	
+	// Native secret key tweak multiply
+	private static native String nativeSecretKeyTweakMultiply(String secretKey, String tweak);
+	
+	// Native public key tweak multiply
+	private static native String nativePublicKeyTweakMultiply(String publicKey, String tweak);
+	
+	// Native shared secret key from secret key and public key
+	private static native String nativeSharedSecretKeyFromSecretKeyAndPublicKey(String secretKey, String publicKey);
 	
 	// Native Pedersen commit
 	private static native String nativePedersenCommit(String blind, String value);
@@ -466,6 +754,9 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 	
 	// Native public key to Pedersen commit
 	private static native String nativePublicKeyToPedersenCommit(String publicKey);
+	
+	// Native create single-signer signature
+	private static native String nativeCreateSingleSignerSignature(String message, String secretKey, String secretNonce, String publicKey, String publicNonce, String publicNonceTotal, String seed);
 	
 	// Native add single-signer signatures
 	private static native String nativeAddSingleSignerSignatures(String[] signatures, String publicNonceTotal);
@@ -484,6 +775,18 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 	
 	// Native combine public keys
 	private static native String nativeCombinePublicKeys(String[] publicKeys);
+	
+	// Native create secret nonce
+	private static native String nativeCreateSecretNonce(String seed);
+	
+	// Native create message hash signature
+	private static native String nativeCreateMessageHashSignature(String messageHash, String secretKey);
+	
+	// Native verify message hash signature
+	private static native boolean nativeVerifyMessageHashSignature(String signature, String messageHash, String publicKey);
+	
+	// Native seed size
+	private static native int nativeSeedSize();
 	
 	// From readable array
 	private static String[] fromReadableArray(ReadableArray readableArray) throws Exception {
@@ -507,5 +810,22 @@ public class Secp256k1ZkpReactModule extends ReactContextBaseJavaModule {
 		
 		// Return result
 		return result;
+	}
+	
+	// To hex string
+	private static String toHexString(byte[] input) {
+	
+		// Create result
+		StringBuilder result = new StringBuilder(input.length * HEX_CHARACTER_LENGTH);
+		
+		// Go through all bytes in the input
+		for(byte inputByte : input) {
+		
+			// Append byte to result
+			result.append(String.format("%02x", inputByte));
+		}
+		
+		// Return result as a string
+		return result.toString();
 	}
 }

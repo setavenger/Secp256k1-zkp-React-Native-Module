@@ -27,6 +27,24 @@ static void initialize();
 
 // Supporting function implementation
 
+// Blind switch
+vector<uint8_t> blindSwitch(const uint8_t *blind, size_t blindSize, const char *value) {
+
+	// Initialize
+	initialize();
+	
+	// Check if performing blind switch failed
+	vector<uint8_t> result(Secp256k1Zkp::blindSize());
+	if(!Secp256k1Zkp::blindSwitch(result.data(), blind, blindSize, value)) {
+	
+		// Throw error
+		throw runtime_error("Performing blind switch failed");
+	}
+	
+	// Return result
+	return result;
+}
+
 // Blind sum
 vector<uint8_t> blindSum(const uint8_t *positiveBlinds, size_t positiveBlindsSizes[], size_t numberOfPositiveBlinds, const uint8_t *negativeBlinds, size_t negativeBlindsSizes[], size_t numberOfNegativeBlinds) {
 
@@ -146,6 +164,28 @@ bool isValidSingleSignerSignature(const uint8_t *signature, size_t signatureSize
 }
 
 // Create bulletproof blindless
+vector<uint8_t> createBulletproof(const uint8_t *blind, size_t blindSize, const char *value, const uint8_t *nonce, size_t nonceSize, const uint8_t *privateNonce, size_t privateNonceSize, const uint8_t *extraCommit, size_t extraCommitSize, const uint8_t *message, size_t messageSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if creating bulletproof failed
+	vector<uint8_t> proof(Secp256k1Zkp::bulletproofProofSize());
+	char proofSize[MAX_64_BIT_INTEGER_STRING_LENGTH];
+	if(!Secp256k1Zkp::createBulletproof(proof.data(), proofSize, blind, blindSize, value, nonce, nonceSize, privateNonce, privateNonceSize, extraCommit, extraCommitSize, message, messageSize)) {
+	
+		// Throw error
+		throw runtime_error("Creating bulletproof failed");
+	}
+	
+	// Set proof's size to proof size
+	proof.resize(strtoull(proofSize, nullptr, 10));
+	
+	// Return proof
+	return proof;
+}
+
+// Create bulletproof blindless
 vector<uint8_t> createBulletproofBlindless(uint8_t *tauX, size_t tauXSize, const uint8_t *tOne, size_t tOneSize, const uint8_t *tTwo, size_t tTwoSize, const uint8_t *commit, size_t commitSize, const char *value, const uint8_t *nonce, size_t nonceSize, const uint8_t *extraCommit, size_t extraCommitSize, const uint8_t *message, size_t messageSize) {
 
 	// Initialize
@@ -204,6 +244,24 @@ bool verifyBulletproof(const uint8_t *proof, size_t proofSize, const uint8_t *co
 	return true;
 }
 
+// Public key from secret key
+vector<uint8_t> publicKeyFromSecretKey(const uint8_t *secretKey, size_t secretKeySize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if getting public key from secret key failed
+	vector<uint8_t> publicKey(Secp256k1Zkp::publicKeySize());
+	if(!Secp256k1Zkp::publicKeyFromSecretKey(publicKey.data(), secretKey, secretKeySize)) {
+	
+		// Throw error
+		throw runtime_error("Getting public key from secret key failed");
+	}
+	
+	// Return public key
+	return publicKey;
+}
+
 // Public key from data
 vector<uint8_t> publicKeyFromData(const uint8_t *data, size_t dataSize) {
 
@@ -220,6 +278,114 @@ vector<uint8_t> publicKeyFromData(const uint8_t *data, size_t dataSize) {
 	
 	// Return public key
 	return publicKey;
+}
+
+// Uncompress public key
+vector<uint8_t> uncompressPublicKey(const uint8_t *publicKey, size_t publicKeySize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if uncompressing the public key failed
+	vector<uint8_t> uncompressedPublicKey(Secp256k1Zkp::uncompressedPublicKeySize());
+	if(!Secp256k1Zkp::uncompressPublicKey(uncompressedPublicKey.data(), publicKey, publicKeySize)) {
+	
+		// Throw error
+		throw runtime_error("Uncompressing the public key failed");
+	}
+	
+	// Return uncompressed public key
+	return uncompressedPublicKey;
+}
+
+// Secret key tweak add
+vector<uint8_t> secretKeyTweakAdd(const uint8_t *secretKey, size_t secretKeySize, const uint8_t *tweak, size_t tweakSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if performing secret key tweak add failed
+	vector<uint8_t> result(Secp256k1Zkp::secretKeySize());
+	if(!Secp256k1Zkp::secretKeyTweakAdd(result.data(), secretKey, secretKeySize, tweak, tweakSize)) {
+	
+		// Throw error
+		throw runtime_error("Performing secret key tweak add failed");
+	}
+	
+	// Return result
+	return result;
+}
+
+// Public key tweak add
+vector<uint8_t> publicKeyTweakAdd(const uint8_t *publicKey, size_t publicKeySize, const uint8_t *tweak, size_t tweakSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if performing public key tweak add failed
+	vector<uint8_t> result(Secp256k1Zkp::publicKeySize());
+	if(!Secp256k1Zkp::publicKeyTweakAdd(result.data(), publicKey, publicKeySize, tweak, tweakSize)) {
+	
+		// Throw error
+		throw runtime_error("Performing public key tweak add failed");
+	}
+	
+	// Return result
+	return result;
+}
+
+// Secret key tweak multiply
+vector<uint8_t> secretKeyTweakMultiply(const uint8_t *secretKey, size_t secretKeySize, const uint8_t *tweak, size_t tweakSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if performing secret key tweak multiply failed
+	vector<uint8_t> result(Secp256k1Zkp::secretKeySize());
+	if(!Secp256k1Zkp::secretKeyTweakMultiply(result.data(), secretKey, secretKeySize, tweak, tweakSize)) {
+	
+		// Throw error
+		throw runtime_error("Performing secret key tweak multiply failed");
+	}
+	
+	// Return result
+	return result;
+}
+
+// Public key tweak multiply
+vector<uint8_t> publicKeyTweakMultiply(const uint8_t *publicKey, size_t publicKeySize, const uint8_t *tweak, size_t tweakSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if performing public key tweak multiply failed
+	vector<uint8_t> result(Secp256k1Zkp::publicKeySize());
+	if(!Secp256k1Zkp::publicKeyTweakMultiply(result.data(), publicKey, publicKeySize, tweak, tweakSize)) {
+	
+		// Throw error
+		throw runtime_error("Performing public key tweak multiply failed");
+	}
+	
+	// Return result
+	return result;
+}
+
+// Shared secret key from secret key and public key
+vector<uint8_t> sharedSecretKeyFromSecretKeyAndPublicKey(const uint8_t *secretKey, size_t secretKeySize, const uint8_t *publicKey, size_t publicKeySize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if getting shared secret key from secret key and public key failed
+	vector<uint8_t> sharedSecretKey(Secp256k1Zkp::secretKeySize());
+	if(!Secp256k1Zkp::sharedSecretKeyFromSecretKeyAndPublicKey(sharedSecretKey.data(), secretKey, secretKeySize, publicKey, publicKeySize)) {
+	
+		// Throw error
+		throw runtime_error("Getting shared secret key from secret key and public key failed");
+	}
+	
+	// Return shared secret key
+	return sharedSecretKey;
 }
 
 // Pedersen commit
@@ -292,6 +458,24 @@ vector<uint8_t> publicKeyToPedersenCommit(const uint8_t *publicKey, size_t publi
 	
 	// Return commit
 	return commit;
+}
+
+// Create single-signer signature
+vector<uint8_t> createSingleSignerSignature(const uint8_t *message, size_t messageSize, const uint8_t *secretKey, size_t secretKeySize, const uint8_t *secretNonce, size_t secretNonceSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *publicNonce, size_t publicNonceSize, const uint8_t *publicNonceTotal, size_t publicNonceTotalSize, const uint8_t *seed, size_t seedSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if creating single-signer signature failed
+	vector<uint8_t> signature(Secp256k1Zkp::singleSignerSignatureSize());
+	if(!Secp256k1Zkp::createSingleSignerSignature(signature.data(), message, messageSize, secretKey, secretKeySize, secretNonce, secretNonceSize, publicKey, publicKeySize, publicNonce, publicNonceSize, publicNonceTotal, publicNonceTotalSize, seed, seedSize)) {
+	
+		// Throw error
+		throw runtime_error("Creating single-signer signature failed");
+	}
+	
+	// Return signature
+	return signature;
 }
 
 // Add single-signer signatures
@@ -399,6 +583,70 @@ vector<uint8_t> combinePublicKeys(const uint8_t *publicKeys, size_t publicKeysSi
 	
 	// Return result
 	return result;
+}
+
+// Create secret nonce
+vector<uint8_t> createSecretNonce(const uint8_t *seed, size_t seedSize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if creating secure nonce failed
+	vector<uint8_t> nonce(Secp256k1Zkp::nonceSize());
+	if(!Secp256k1Zkp::createSecretNonce(nonce.data(), seed, seedSize)) {
+	
+		// Throw error
+		throw runtime_error("Creating secure nonce failed");
+	}
+	
+	// Return nonce
+	return nonce;
+}
+
+// Create message hash signature
+vector<uint8_t> createMessageHashSignature(const uint8_t *messageHash, size_t messageHashSize, const uint8_t *secretKey, size_t secretKeySize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if creating message hash signature failed
+	vector<uint8_t> signature(Secp256k1Zkp::maximumMessageHashSignatureSize());
+	char signatureSize[MAX_64_BIT_INTEGER_STRING_LENGTH];
+	if(!Secp256k1Zkp::createMessageHashSignature(signature.data(), signatureSize, messageHash, messageHashSize, secretKey, secretKeySize)) {
+	
+		// Throw error
+		throw runtime_error("Creating message hash signature failed");
+	}
+	
+	// Set signature's size to signature size
+	signature.resize(strtoull(signatureSize, nullptr, 10));
+	
+	// Return signature
+	return signature;
+}
+
+// Verify message hash signature
+bool verifyMessageHashSignature(const uint8_t *signature, size_t signatureSize, const uint8_t *messageHash, size_t messageHashSize, const uint8_t *publicKey, size_t publicKeySize) {
+
+	// Initialize
+	initialize();
+	
+	// Check if message hash signature isn't verified
+	if(!Secp256k1Zkp::verifyMessageHashSignature(signature, signatureSize, messageHash, messageHashSize, publicKey, publicKeySize)) {
+	
+		// Return false
+		return false;
+	}
+	
+	// Return true
+	return true;
+}
+
+// Seed size
+size_t seedSize() {
+
+	// Return seed size
+	return Secp256k1Zkp::seedSize();
 }
 
 // Initialize
