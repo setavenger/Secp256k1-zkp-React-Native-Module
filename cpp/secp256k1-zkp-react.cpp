@@ -22,16 +22,16 @@ static const size_t MAX_64_BIT_INTEGER_STRING_LENGTH = sizeof("18446744073709551
 // Function prototypes
 
 // Initialize
-static void initialize();
+static void initialize(const uint8_t *seed, size_t seedSize);
 
 
 // Supporting function implementation
 
 // Blind switch
-vector<uint8_t> blindSwitch(const uint8_t *blind, size_t blindSize, const char *value) {
+vector<uint8_t> blindSwitch(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *blind, size_t blindSize, const char *value) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing blind switch failed
 	vector<uint8_t> result(Secp256k1Zkp::blindSize());
@@ -46,10 +46,10 @@ vector<uint8_t> blindSwitch(const uint8_t *blind, size_t blindSize, const char *
 }
 
 // Blind sum
-vector<uint8_t> blindSum(const uint8_t *positiveBlinds, size_t positiveBlindsSizes[], size_t numberOfPositiveBlinds, const uint8_t *negativeBlinds, size_t negativeBlindsSizes[], size_t numberOfNegativeBlinds) {
+vector<uint8_t> blindSum(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *positiveBlinds, size_t positiveBlindsSizes[], size_t numberOfPositiveBlinds, const uint8_t *negativeBlinds, size_t negativeBlindsSizes[], size_t numberOfNegativeBlinds) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Initialize blinds and blinds sizes
 	vector<uint8_t> blinds;
@@ -96,10 +96,10 @@ vector<uint8_t> blindSum(const uint8_t *positiveBlinds, size_t positiveBlindsSiz
 }
 
 // Is valid secret key
-bool isValidSecretKey(const uint8_t *secretKey, size_t secretKeySize) {
+bool isValidSecretKey(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *secretKey, size_t secretKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 
 	// Check if secret key is not a valid secret key
 	if(!Secp256k1Zkp::isValidSecretKey(secretKey, secretKeySize)) {
@@ -113,10 +113,10 @@ bool isValidSecretKey(const uint8_t *secretKey, size_t secretKeySize) {
 }
 
 // Is valid public key
-bool isValidPublicKey(const uint8_t *publicKey, size_t publicKeySize) {
+bool isValidPublicKey(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *publicKey, size_t publicKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if public key is not a valid public key
 	if(!Secp256k1Zkp::isValidPublicKey(publicKey, publicKeySize)) {
@@ -130,10 +130,10 @@ bool isValidPublicKey(const uint8_t *publicKey, size_t publicKeySize) {
 }
 
 // Is valid commit
-bool isValidCommit(const uint8_t *commit, size_t commitSize) {
+bool isValidCommit(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *commit, size_t commitSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if commit is not a valid commit
 	if(!Secp256k1Zkp::isValidCommit(commit, commitSize)) {
@@ -147,10 +147,10 @@ bool isValidCommit(const uint8_t *commit, size_t commitSize) {
 }
 
 // Is valid single-signer signature
-bool isValidSingleSignerSignature(const uint8_t *signature, size_t signatureSize) {
+bool isValidSingleSignerSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *signature, size_t signatureSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if signature is not a valid single-signer signature
 	if(!Secp256k1Zkp::isValidSingleSignerSignature(signature, signatureSize)) {
@@ -164,10 +164,10 @@ bool isValidSingleSignerSignature(const uint8_t *signature, size_t signatureSize
 }
 
 // Create bulletproof blindless
-vector<uint8_t> createBulletproof(const uint8_t *blind, size_t blindSize, const char *value, const uint8_t *nonce, size_t nonceSize, const uint8_t *privateNonce, size_t privateNonceSize, const uint8_t *extraCommit, size_t extraCommitSize, const uint8_t *message, size_t messageSize) {
+vector<uint8_t> createBulletproof(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *blind, size_t blindSize, const char *value, const uint8_t *nonce, size_t nonceSize, const uint8_t *privateNonce, size_t privateNonceSize, const uint8_t *extraCommit, size_t extraCommitSize, const uint8_t *message, size_t messageSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if creating bulletproof failed
 	vector<uint8_t> proof(Secp256k1Zkp::bulletproofProofSize());
@@ -186,10 +186,10 @@ vector<uint8_t> createBulletproof(const uint8_t *blind, size_t blindSize, const 
 }
 
 // Create bulletproof blindless
-vector<uint8_t> createBulletproofBlindless(uint8_t *tauX, size_t tauXSize, const uint8_t *tOne, size_t tOneSize, const uint8_t *tTwo, size_t tTwoSize, const uint8_t *commit, size_t commitSize, const char *value, const uint8_t *nonce, size_t nonceSize, const uint8_t *extraCommit, size_t extraCommitSize, const uint8_t *message, size_t messageSize) {
+vector<uint8_t> createBulletproofBlindless(const uint8_t *contextSeed, size_t contextSeedSize, uint8_t *tauX, size_t tauXSize, const uint8_t *tOne, size_t tOneSize, const uint8_t *tTwo, size_t tTwoSize, const uint8_t *commit, size_t commitSize, const char *value, const uint8_t *nonce, size_t nonceSize, const uint8_t *extraCommit, size_t extraCommitSize, const uint8_t *message, size_t messageSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if creating bulletproof blindless failed
 	vector<uint8_t> proof(Secp256k1Zkp::bulletproofProofSize());
@@ -208,10 +208,10 @@ vector<uint8_t> createBulletproofBlindless(uint8_t *tauX, size_t tauXSize, const
 }
 
 // Rewind bulletproof
-tuple<string, vector<uint8_t>, vector<uint8_t>> rewindBulletproof(const uint8_t *proof, size_t proofSize, const uint8_t *commit, size_t commitSize, const uint8_t *nonce, size_t nonceSize) {
+tuple<string, vector<uint8_t>, vector<uint8_t>> rewindBulletproof(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *proof, size_t proofSize, const uint8_t *commit, size_t commitSize, const uint8_t *nonce, size_t nonceSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing rewind bulletproof failed
 	char value[MAX_64_BIT_INTEGER_STRING_LENGTH];
@@ -228,10 +228,10 @@ tuple<string, vector<uint8_t>, vector<uint8_t>> rewindBulletproof(const uint8_t 
 }
 
 // Verify bulletproof
-bool verifyBulletproof(const uint8_t *proof, size_t proofSize, const uint8_t *commit, size_t commitSize, const uint8_t *extraCommit, size_t extraCommitSize) {
+bool verifyBulletproof(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *proof, size_t proofSize, const uint8_t *commit, size_t commitSize, const uint8_t *extraCommit, size_t extraCommitSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if bulletproof isn't verified
 	if(!Secp256k1Zkp::verifyBulletproof(proof, proofSize, commit, commitSize, extraCommit, extraCommitSize)) {
@@ -245,10 +245,10 @@ bool verifyBulletproof(const uint8_t *proof, size_t proofSize, const uint8_t *co
 }
 
 // Public key from secret key
-vector<uint8_t> publicKeyFromSecretKey(const uint8_t *secretKey, size_t secretKeySize) {
+vector<uint8_t> publicKeyFromSecretKey(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *secretKey, size_t secretKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if getting public key from secret key failed
 	vector<uint8_t> publicKey(Secp256k1Zkp::publicKeySize());
@@ -263,10 +263,10 @@ vector<uint8_t> publicKeyFromSecretKey(const uint8_t *secretKey, size_t secretKe
 }
 
 // Public key from data
-vector<uint8_t> publicKeyFromData(const uint8_t *data, size_t dataSize) {
+vector<uint8_t> publicKeyFromData(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *data, size_t dataSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if getting public key from data failed
 	vector<uint8_t> publicKey(Secp256k1Zkp::publicKeySize());
@@ -281,10 +281,10 @@ vector<uint8_t> publicKeyFromData(const uint8_t *data, size_t dataSize) {
 }
 
 // Uncompress public key
-vector<uint8_t> uncompressPublicKey(const uint8_t *publicKey, size_t publicKeySize) {
+vector<uint8_t> uncompressPublicKey(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *publicKey, size_t publicKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if uncompressing the public key failed
 	vector<uint8_t> uncompressedPublicKey(Secp256k1Zkp::uncompressedPublicKeySize());
@@ -299,10 +299,10 @@ vector<uint8_t> uncompressPublicKey(const uint8_t *publicKey, size_t publicKeySi
 }
 
 // Secret key tweak add
-vector<uint8_t> secretKeyTweakAdd(const uint8_t *secretKey, size_t secretKeySize, const uint8_t *tweak, size_t tweakSize) {
+vector<uint8_t> secretKeyTweakAdd(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *secretKey, size_t secretKeySize, const uint8_t *tweak, size_t tweakSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing secret key tweak add failed
 	vector<uint8_t> result(Secp256k1Zkp::secretKeySize());
@@ -317,10 +317,10 @@ vector<uint8_t> secretKeyTweakAdd(const uint8_t *secretKey, size_t secretKeySize
 }
 
 // Public key tweak add
-vector<uint8_t> publicKeyTweakAdd(const uint8_t *publicKey, size_t publicKeySize, const uint8_t *tweak, size_t tweakSize) {
+vector<uint8_t> publicKeyTweakAdd(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *tweak, size_t tweakSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing public key tweak add failed
 	vector<uint8_t> result(Secp256k1Zkp::publicKeySize());
@@ -335,10 +335,10 @@ vector<uint8_t> publicKeyTweakAdd(const uint8_t *publicKey, size_t publicKeySize
 }
 
 // Secret key tweak multiply
-vector<uint8_t> secretKeyTweakMultiply(const uint8_t *secretKey, size_t secretKeySize, const uint8_t *tweak, size_t tweakSize) {
+vector<uint8_t> secretKeyTweakMultiply(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *secretKey, size_t secretKeySize, const uint8_t *tweak, size_t tweakSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing secret key tweak multiply failed
 	vector<uint8_t> result(Secp256k1Zkp::secretKeySize());
@@ -353,10 +353,10 @@ vector<uint8_t> secretKeyTweakMultiply(const uint8_t *secretKey, size_t secretKe
 }
 
 // Public key tweak multiply
-vector<uint8_t> publicKeyTweakMultiply(const uint8_t *publicKey, size_t publicKeySize, const uint8_t *tweak, size_t tweakSize) {
+vector<uint8_t> publicKeyTweakMultiply(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *tweak, size_t tweakSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing public key tweak multiply failed
 	vector<uint8_t> result(Secp256k1Zkp::publicKeySize());
@@ -371,10 +371,10 @@ vector<uint8_t> publicKeyTweakMultiply(const uint8_t *publicKey, size_t publicKe
 }
 
 // Shared secret key from secret key and public key
-vector<uint8_t> sharedSecretKeyFromSecretKeyAndPublicKey(const uint8_t *secretKey, size_t secretKeySize, const uint8_t *publicKey, size_t publicKeySize) {
+vector<uint8_t> sharedSecretKeyFromSecretKeyAndPublicKey(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *secretKey, size_t secretKeySize, const uint8_t *publicKey, size_t publicKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if getting shared secret key from secret key and public key failed
 	vector<uint8_t> sharedSecretKey(Secp256k1Zkp::secretKeySize());
@@ -389,10 +389,10 @@ vector<uint8_t> sharedSecretKeyFromSecretKeyAndPublicKey(const uint8_t *secretKe
 }
 
 // Pedersen commit
-vector<uint8_t> pedersenCommit(const uint8_t *blind, size_t blindSize, const char *value) {
+vector<uint8_t> pedersenCommit(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *blind, size_t blindSize, const char *value) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing Pedersen commit failed
 	vector<uint8_t> result(Secp256k1Zkp::commitSize());
@@ -407,10 +407,10 @@ vector<uint8_t> pedersenCommit(const uint8_t *blind, size_t blindSize, const cha
 }
 
 // Pedersen commit sum
-vector<uint8_t> pedersenCommitSum(const uint8_t *positiveCommits, size_t positiveCommitsSizes[], size_t numberOfPositiveCommits, const uint8_t *negativeCommits, size_t negativeCommitsSizes[], size_t numberOfNegativeCommits) {
+vector<uint8_t> pedersenCommitSum(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *positiveCommits, size_t positiveCommitsSizes[], size_t numberOfPositiveCommits, const uint8_t *negativeCommits, size_t negativeCommitsSizes[], size_t numberOfNegativeCommits) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if performing Pedersen commit sum failed
 	vector<uint8_t> result(Secp256k1Zkp::commitSize());
@@ -425,10 +425,10 @@ vector<uint8_t> pedersenCommitSum(const uint8_t *positiveCommits, size_t positiv
 }
 
 // Pedersen commit to public key
-vector<uint8_t> pedersenCommitToPublicKey(const uint8_t *commit, size_t commitSize) {
+vector<uint8_t> pedersenCommitToPublicKey(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *commit, size_t commitSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if getting public key from Pedersen commit failed
 	vector<uint8_t> publicKey(Secp256k1Zkp::publicKeySize());
@@ -443,10 +443,10 @@ vector<uint8_t> pedersenCommitToPublicKey(const uint8_t *commit, size_t commitSi
 }
 
 // Public key to Pedersen commit
-vector<uint8_t> publicKeyToPedersenCommit(const uint8_t *publicKey, size_t publicKeySize) {
+vector<uint8_t> publicKeyToPedersenCommit(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *publicKey, size_t publicKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if getting Pedersen commit from public key failed
 	vector<uint8_t> commit(Secp256k1Zkp::commitSize());
@@ -461,10 +461,10 @@ vector<uint8_t> publicKeyToPedersenCommit(const uint8_t *publicKey, size_t publi
 }
 
 // Create single-signer signature
-vector<uint8_t> createSingleSignerSignature(const uint8_t *message, size_t messageSize, const uint8_t *secretKey, size_t secretKeySize, const uint8_t *secretNonce, size_t secretNonceSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *publicNonce, size_t publicNonceSize, const uint8_t *publicNonceTotal, size_t publicNonceTotalSize, const uint8_t *seed, size_t seedSize) {
+vector<uint8_t> createSingleSignerSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *message, size_t messageSize, const uint8_t *secretKey, size_t secretKeySize, const uint8_t *secretNonce, size_t secretNonceSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *publicNonce, size_t publicNonceSize, const uint8_t *publicNonceTotal, size_t publicNonceTotalSize, const uint8_t *seed, size_t seedSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if creating single-signer signature failed
 	vector<uint8_t> signature(Secp256k1Zkp::singleSignerSignatureSize());
@@ -479,10 +479,10 @@ vector<uint8_t> createSingleSignerSignature(const uint8_t *message, size_t messa
 }
 
 // Add single-signer signatures
-vector<uint8_t> addSingleSignerSignatures(const uint8_t *signatures, size_t signaturesSizes[], size_t numberOfSignatures, const uint8_t *publicNonceTotal, size_t publicNonceTotalSize) {
+vector<uint8_t> addSingleSignerSignatures(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *signatures, size_t signaturesSizes[], size_t numberOfSignatures, const uint8_t *publicNonceTotal, size_t publicNonceTotalSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if adding single-signer signatures failed
 	vector<uint8_t> result(Secp256k1Zkp::singleSignerSignatureSize());
@@ -497,10 +497,10 @@ vector<uint8_t> addSingleSignerSignatures(const uint8_t *signatures, size_t sign
 }
 
 // Verify single-signer signature
-bool verifySingleSignerSignature(const uint8_t *signature, size_t signatureSize, const uint8_t *message, size_t messageSize, const uint8_t *publicNonce, size_t publicNonceSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *publicKeyTotal, size_t publicKeyTotalSize, bool isPartial) {
+bool verifySingleSignerSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *signature, size_t signatureSize, const uint8_t *message, size_t messageSize, const uint8_t *publicNonce, size_t publicNonceSize, const uint8_t *publicKey, size_t publicKeySize, const uint8_t *publicKeyTotal, size_t publicKeyTotalSize, bool isPartial) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if single-signer signature isn't verified
 	if(!Secp256k1Zkp::verifySingleSignerSignature(signature, signatureSize, message, messageSize, publicNonce, publicNonceSize, publicKey, publicKeySize, publicKeyTotal, publicKeyTotalSize, isPartial)) {
@@ -514,10 +514,10 @@ bool verifySingleSignerSignature(const uint8_t *signature, size_t signatureSize,
 }
 
 // Single-signer signature from data
-vector<uint8_t> singleSignerSignatureFromData(const uint8_t *data, size_t dataSize) {
+vector<uint8_t> singleSignerSignatureFromData(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *data, size_t dataSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if getting single-signer signature from data failed
 	vector<uint8_t> signature(Secp256k1Zkp::singleSignerSignatureSize());
@@ -532,10 +532,10 @@ vector<uint8_t> singleSignerSignatureFromData(const uint8_t *data, size_t dataSi
 }
 
 // Compact single-signer signature
-vector<uint8_t> compactSingleSignerSignature(const uint8_t *signature, size_t signatureSize) {
+vector<uint8_t> compactSingleSignerSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *signature, size_t signatureSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if compacting single-signer signature failed
 	vector<uint8_t> result(Secp256k1Zkp::singleSignerSignatureSize());
@@ -550,10 +550,10 @@ vector<uint8_t> compactSingleSignerSignature(const uint8_t *signature, size_t si
 }
 
 // Uncompact single-signer signature
-vector<uint8_t> uncompactSingleSignerSignature(const uint8_t *signature, size_t signatureSize) {
+vector<uint8_t> uncompactSingleSignerSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *signature, size_t signatureSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if uncompacting single-signer signature failed
 	vector<uint8_t> result(Secp256k1Zkp::uncompactSingleSignerSignatureSize());
@@ -568,10 +568,10 @@ vector<uint8_t> uncompactSingleSignerSignature(const uint8_t *signature, size_t 
 }
 
 // Combine public keys
-vector<uint8_t> combinePublicKeys(const uint8_t *publicKeys, size_t publicKeysSizes[], size_t numberOfPublicKeys) {
+vector<uint8_t> combinePublicKeys(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *publicKeys, size_t publicKeysSizes[], size_t numberOfPublicKeys) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if combining public keys failed
 	vector<uint8_t> result(Secp256k1Zkp::publicKeySize());
@@ -586,10 +586,10 @@ vector<uint8_t> combinePublicKeys(const uint8_t *publicKeys, size_t publicKeysSi
 }
 
 // Create secret nonce
-vector<uint8_t> createSecretNonce(const uint8_t *seed, size_t seedSize) {
+vector<uint8_t> createSecretNonce(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *seed, size_t seedSize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if creating secure nonce failed
 	vector<uint8_t> nonce(Secp256k1Zkp::nonceSize());
@@ -604,10 +604,10 @@ vector<uint8_t> createSecretNonce(const uint8_t *seed, size_t seedSize) {
 }
 
 // Create message hash signature
-vector<uint8_t> createMessageHashSignature(const uint8_t *messageHash, size_t messageHashSize, const uint8_t *secretKey, size_t secretKeySize) {
+vector<uint8_t> createMessageHashSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *messageHash, size_t messageHashSize, const uint8_t *secretKey, size_t secretKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if creating message hash signature failed
 	vector<uint8_t> signature(Secp256k1Zkp::maximumMessageHashSignatureSize());
@@ -626,10 +626,10 @@ vector<uint8_t> createMessageHashSignature(const uint8_t *messageHash, size_t me
 }
 
 // Verify message hash signature
-bool verifyMessageHashSignature(const uint8_t *signature, size_t signatureSize, const uint8_t *messageHash, size_t messageHashSize, const uint8_t *publicKey, size_t publicKeySize) {
+bool verifyMessageHashSignature(const uint8_t *contextSeed, size_t contextSeedSize, const uint8_t *signature, size_t signatureSize, const uint8_t *messageHash, size_t messageHashSize, const uint8_t *publicKey, size_t publicKeySize) {
 
 	// Initialize
-	initialize();
+	initialize(contextSeed, contextSeedSize);
 	
 	// Check if message hash signature isn't verified
 	if(!Secp256k1Zkp::verifyMessageHashSignature(signature, signatureSize, messageHash, messageHashSize, publicKey, publicKeySize)) {
@@ -650,13 +650,13 @@ size_t seedSize() {
 }
 
 // Initialize
-void initialize() {
+void initialize(const uint8_t *seed, size_t seedSize) {
 
 	// Check if secp256k1-zkp context isn't initialized
 	if(!Secp256k1Zkp::context) {
 	
 		// Initialize secp256k1-zkp
-		Secp256k1Zkp::initialize();
+		Secp256k1Zkp::initialize(seed, seedSize);
 		
 		// Check if secp256k1-zkp context was initialized
 		if(Secp256k1Zkp::context) {

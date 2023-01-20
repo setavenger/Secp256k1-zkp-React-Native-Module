@@ -18,6 +18,12 @@ static const size_t HEX_CHARACTER_LENGTH = (sizeof("FF") - sizeof('\0'));
 static const int BITS_IN_A_BYTE = 8;
 
 
+// Global variables
+
+// Context seed
+static vector<uint8_t> contextSeed;
+
+
 // Function prototypes
 
 // From hex string
@@ -34,6 +40,9 @@ static bool fromBool(const NSNumber *input);
 
 // To bool
 static const NSNumber *toBool(bool input);
+
+// Initialize context seed
+static void initializeContextSeed();
 
 
 // Implementations
@@ -54,6 +63,9 @@ RCT_EXPORT_METHOD(blindSwitch:(nonnull NSString *)blind
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from blind
 		const vector<uint8_t> blindData = fromHexString(blind);
 		
@@ -66,7 +78,7 @@ RCT_EXPORT_METHOD(blindSwitch:(nonnull NSString *)blind
 		}
 		
 		// Resolve performing blind switch
-		resolve(toHexString(blindSwitch(blindData.data(), blindData.size(), valueData)));
+		resolve(toHexString(blindSwitch(contextSeed.data(), contextSeed.size(), blindData.data(), blindData.size(), valueData)));
 	}
 
 	// Catch errors
@@ -104,6 +116,9 @@ RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get number of positive blinds
 		const NSUInteger numberOfPositiveBlinds = [positiveBlinds count];
 	
@@ -153,7 +168,7 @@ RCT_EXPORT_METHOD(blindSum:(nonnull NSArray *)positiveBlinds
 		}
 		
 		//Resolve performing blind sum
-		resolve(toHexString(blindSum(positiveBlindsData.data(), positiveBlindsSizes, numberOfPositiveBlinds, negativeBlindsData.data(), negativeBlindsSizes, numberOfNegativeBlinds)));
+		resolve(toHexString(blindSum(contextSeed.data(), contextSeed.size(), positiveBlindsData.data(), positiveBlindsSizes, numberOfPositiveBlinds, negativeBlindsData.data(), negativeBlindsSizes, numberOfNegativeBlinds)));
 	}
 
 	// Catch errors
@@ -190,11 +205,14 @@ RCT_EXPORT_METHOD(isValidSecretKey:(nonnull NSString *)secretKey
 	// Try
 	try {
 
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from secret key
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 
 		// Resolve if secret key is a valid secret key
-		resolve(toBool(isValidSecretKey(secretKeyData.data(), secretKeyData.size())));
+		resolve(toBool(isValidSecretKey(contextSeed.data(), contextSeed.size(), secretKeyData.data(), secretKeyData.size())));
 	}
 
 	// Catch errors
@@ -231,11 +249,14 @@ RCT_EXPORT_METHOD(isValidPublicKey:(nonnull NSString *)publicKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from public key
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 
 		// Resolve if public key is a valid public key
-		resolve(toBool(isValidPublicKey(publicKeyData.data(), publicKeyData.size())));
+		resolve(toBool(isValidPublicKey(contextSeed.data(), contextSeed.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors
@@ -272,11 +293,14 @@ RCT_EXPORT_METHOD(isValidCommit:(nonnull NSString *)commit
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from commit
 		const vector<uint8_t> commitData = fromHexString(commit);
 
 		// Resolve if commit is a valid commit
-		resolve(toBool(isValidCommit(commitData.data(), commitData.size())));
+		resolve(toBool(isValidCommit(contextSeed.data(), contextSeed.size(), commitData.data(), commitData.size())));
 	}
 
 	// Catch errors
@@ -313,11 +337,14 @@ RCT_EXPORT_METHOD(isValidSingleSignerSignature:(nonnull NSString *)signature
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from signature
 		const vector<uint8_t> signatureData = fromHexString(signature);
 
 		// Resolve if signature is a valid single-signer signature
-		resolve(toBool(isValidSingleSignerSignature(signatureData.data(), signatureData.size())));
+		resolve(toBool(isValidSingleSignerSignature(contextSeed.data(), contextSeed.size(), signatureData.data(), signatureData.size())));
 	}
 
 	// Catch errors
@@ -359,6 +386,9 @@ RCT_EXPORT_METHOD(createBulletproof:(nonnull NSString *)blind
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from blind
 		const vector<uint8_t> blindData = fromHexString(blind);
 		
@@ -383,7 +413,7 @@ RCT_EXPORT_METHOD(createBulletproof:(nonnull NSString *)blind
 		const vector<uint8_t> messageData = fromHexString(message);
 
 		// Resolve creating bulletproof
-		resolve(toHexString(createBulletproof(blindData.data(), blindData.size(), valueData, nonceData.data(), nonceData.size(), privateNonceData.data(), privateNonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size())));
+		resolve(toHexString(createBulletproof(contextSeed.data(), contextSeed.size(), blindData.data(), blindData.size(), valueData, nonceData.data(), nonceData.size(), privateNonceData.data(), privateNonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size())));
 	}
 
 	// Catch errors
@@ -427,6 +457,9 @@ RCT_EXPORT_METHOD(createBulletproofBlindless:(nonnull NSString *)tauX
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from tau X
 		vector<uint8_t> tauXData = fromHexString(tauX);
 		
@@ -457,7 +490,7 @@ RCT_EXPORT_METHOD(createBulletproofBlindless:(nonnull NSString *)tauX
 		const vector<uint8_t> messageData = fromHexString(message);
 
 		// Resolve creating bulletproof blindless
-		resolve(toHexString(createBulletproofBlindless(tauXData.data(), tauXData.size(), tOneData.data(), tOneData.size(), tTwoData.data(), tTwoData.size(), commitData.data(), commitData.size(), valueData, nonceData.data(), nonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size())));
+		resolve(toHexString(createBulletproofBlindless(contextSeed.data(), contextSeed.size(), tauXData.data(), tauXData.size(), tOneData.data(), tOneData.size(), tTwoData.data(), tTwoData.size(), commitData.data(), commitData.size(), valueData, nonceData.data(), nonceData.size(), extraCommitData.data(), extraCommitData.size(), messageData.data(), messageData.size())));
 	}
 
 	// Catch errors
@@ -496,6 +529,9 @@ RCT_EXPORT_METHOD(rewindBulletproof:(nonnull NSString *)proof
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from proof
 		const vector<uint8_t> proofData = fromHexString(proof);
 		
@@ -506,7 +542,7 @@ RCT_EXPORT_METHOD(rewindBulletproof:(nonnull NSString *)proof
 		const vector<uint8_t> nonceData = fromHexString(nonce);
 
 		// Performing rewind bulletproof
-		const tuple<string, vector<uint8_t>, vector<uint8_t>> bulletproofData = rewindBulletproof(proofData.data(), proofData.size(), commitData.data(), commitData.size(), nonceData.data(), nonceData.size());
+		const tuple<string, vector<uint8_t>, vector<uint8_t>> bulletproofData = rewindBulletproof(contextSeed.data(), contextSeed.size(), proofData.data(), proofData.size(), commitData.data(), commitData.size(), nonceData.data(), nonceData.size());
 		
 		// Check if getting value as a string failed
 		const NSString *valueString = [NSString stringWithUTF8String:get<0>(bulletproofData).c_str()];
@@ -564,6 +600,9 @@ RCT_EXPORT_METHOD(verifyBulletproof:(nonnull NSString *)proof
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from proof
 		const vector<uint8_t> proofData = fromHexString(proof);
 		
@@ -574,7 +613,7 @@ RCT_EXPORT_METHOD(verifyBulletproof:(nonnull NSString *)proof
 		const vector<uint8_t> extraCommitData = fromHexString(extraCommit);
 
 		// Return if bulletproof is verified
-		resolve(toBool(verifyBulletproof(proofData.data(), proofData.size(), commitData.data(), commitData.size(), extraCommitData.data(), extraCommitData.size())));
+		resolve(toBool(verifyBulletproof(contextSeed.data(), contextSeed.size(), proofData.data(), proofData.size(), commitData.data(), commitData.size(), extraCommitData.data(), extraCommitData.size())));
 	}
 
 	// Catch errors
@@ -611,11 +650,14 @@ RCT_EXPORT_METHOD(publicKeyFromSecretKey:(nonnull NSString *)secretKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from secret key
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 
 		// Resolve getting public key from secret key
-		resolve(toHexString(publicKeyFromSecretKey(secretKeyData.data(), secretKeyData.size())));
+		resolve(toHexString(publicKeyFromSecretKey(contextSeed.data(), contextSeed.size(), secretKeyData.data(), secretKeyData.size())));
 	}
 
 	// Catch errors
@@ -652,11 +694,14 @@ RCT_EXPORT_METHOD(publicKeyFromData:(nonnull NSString *)data
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from data
 		const vector<uint8_t> dataData = fromHexString(data);
 
 		// Resolve getting public key from data
-		resolve(toHexString(publicKeyFromData(dataData.data(), dataData.size())));
+		resolve(toHexString(publicKeyFromData(contextSeed.data(), contextSeed.size(), dataData.data(), dataData.size())));
 	}
 
 	// Catch errors
@@ -693,11 +738,14 @@ RCT_EXPORT_METHOD(uncompressPublicKey:(nonnull NSString *)publicKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from public key
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 
 		// Resolve uncompressing the public key
-		resolve(toHexString(uncompressPublicKey(publicKeyData.data(), publicKeyData.size())));
+		resolve(toHexString(uncompressPublicKey(contextSeed.data(), contextSeed.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors
@@ -735,6 +783,9 @@ RCT_EXPORT_METHOD(secretKeyTweakAdd:(nonnull NSString *)secretKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from secret key
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 		
@@ -742,7 +793,7 @@ RCT_EXPORT_METHOD(secretKeyTweakAdd:(nonnull NSString *)secretKey
 		const vector<uint8_t> tweakData = fromHexString(tweak);
 
 		// Resolve performing secret key tweak add
-		resolve(toHexString(secretKeyTweakAdd(secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size())));
+		resolve(toHexString(secretKeyTweakAdd(contextSeed.data(), contextSeed.size(), secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size())));
 	}
 
 	// Catch errors
@@ -780,6 +831,9 @@ RCT_EXPORT_METHOD(publicKeyTweakAdd:(nonnull NSString *)publicKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from public key
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 		
@@ -787,7 +841,7 @@ RCT_EXPORT_METHOD(publicKeyTweakAdd:(nonnull NSString *)publicKey
 		const vector<uint8_t> tweakData = fromHexString(tweak);
 
 		// Resolve performing public key tweak add
-		resolve(toHexString(publicKeyTweakAdd(publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size())));
+		resolve(toHexString(publicKeyTweakAdd(contextSeed.data(), contextSeed.size(), publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size())));
 	}
 
 	// Catch errors
@@ -825,6 +879,9 @@ RCT_EXPORT_METHOD(secretKeyTweakMultiply:(nonnull NSString *)secretKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from secret key
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 		
@@ -832,7 +889,7 @@ RCT_EXPORT_METHOD(secretKeyTweakMultiply:(nonnull NSString *)secretKey
 		const vector<uint8_t> tweakData = fromHexString(tweak);
 
 		// Resolve performing secret key tweak multiply
-		resolve(toHexString(secretKeyTweakMultiply(secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size())));
+		resolve(toHexString(secretKeyTweakMultiply(contextSeed.data(), contextSeed.size(), secretKeyData.data(), secretKeyData.size(), tweakData.data(), tweakData.size())));
 	}
 
 	// Catch errors
@@ -870,6 +927,9 @@ RCT_EXPORT_METHOD(publicKeyTweakMultiply:(nonnull NSString *)publicKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from public key
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 		
@@ -877,7 +937,7 @@ RCT_EXPORT_METHOD(publicKeyTweakMultiply:(nonnull NSString *)publicKey
 		const vector<uint8_t> tweakData = fromHexString(tweak);
 
 		// Resolve performing public key tweak multiply
-		resolve(toHexString(publicKeyTweakMultiply(publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size())));
+		resolve(toHexString(publicKeyTweakMultiply(contextSeed.data(), contextSeed.size(), publicKeyData.data(), publicKeyData.size(), tweakData.data(), tweakData.size())));
 	}
 
 	// Catch errors
@@ -915,6 +975,9 @@ RCT_EXPORT_METHOD(sharedSecretKeyFromSecretKeyAndPublicKey:(nonnull NSString *)s
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from secret key
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 		
@@ -922,7 +985,7 @@ RCT_EXPORT_METHOD(sharedSecretKeyFromSecretKeyAndPublicKey:(nonnull NSString *)s
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 		
 		// Resolve getting shared secret key from secret key and public key
-		resolve(toHexString(sharedSecretKeyFromSecretKeyAndPublicKey(secretKeyData.data(), secretKeyData.size(), publicKeyData.data(), publicKeyData.size())));
+		resolve(toHexString(sharedSecretKeyFromSecretKeyAndPublicKey(contextSeed.data(), contextSeed.size(), secretKeyData.data(), secretKeyData.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors
@@ -960,6 +1023,9 @@ RCT_EXPORT_METHOD(pedersenCommit:(nonnull NSString *)blind
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from blind
 		const vector<uint8_t> blindData = fromHexString(blind);
 		
@@ -972,7 +1038,7 @@ RCT_EXPORT_METHOD(pedersenCommit:(nonnull NSString *)blind
 		}
 
 		// Resolve performing Pedersen commit
-		resolve(toHexString(pedersenCommit(blindData.data(), blindData.size(), valueData)));
+		resolve(toHexString(pedersenCommit(contextSeed.data(), contextSeed.size(), blindData.data(), blindData.size(), valueData)));
 	}
 
 	// Catch errors
@@ -1010,6 +1076,9 @@ RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSArray *)positiveCommits
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get number of positive commits
 		const NSUInteger numberOfPositiveCommits = [positiveCommits count];
 	
@@ -1059,7 +1128,7 @@ RCT_EXPORT_METHOD(pedersenCommitSum:(nonnull NSArray *)positiveCommits
 		}
 		
 		// Resolve performing Pedersen commit sum
-		resolve(toHexString(pedersenCommitSum(positiveCommitsData.data(), positiveCommitsSizes, numberOfPositiveCommits, negativeCommitsData.data(), negativeCommitsSizes, numberOfNegativeCommits)));
+		resolve(toHexString(pedersenCommitSum(contextSeed.data(), contextSeed.size(), positiveCommitsData.data(), positiveCommitsSizes, numberOfPositiveCommits, negativeCommitsData.data(), negativeCommitsSizes, numberOfNegativeCommits)));
 	}
 
 	// Catch errors
@@ -1096,11 +1165,14 @@ RCT_EXPORT_METHOD(pedersenCommitToPublicKey:(nonnull NSString *)commit
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from commit
 		const vector<uint8_t> commitData = fromHexString(commit);
 
 		// Resolve getting public key from Pedersen commit
-		resolve(toHexString(pedersenCommitToPublicKey(commitData.data(), commitData.size())));
+		resolve(toHexString(pedersenCommitToPublicKey(contextSeed.data(), contextSeed.size(), commitData.data(), commitData.size())));
 	}
 
 	// Catch errors
@@ -1137,11 +1209,14 @@ RCT_EXPORT_METHOD(publicKeyToPedersenCommit:(nonnull NSString *)publicKey
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from public key
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 
 		// Resolve getting Pedersen commit from public key
-		resolve(toHexString(publicKeyToPedersenCommit(publicKeyData.data(), publicKeyData.size())));
+		resolve(toHexString(publicKeyToPedersenCommit(contextSeed.data(), contextSeed.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors
@@ -1183,6 +1258,9 @@ RCT_EXPORT_METHOD(createSingleSignerSignature:(nonnull NSString *)message
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from message
 		const vector<uint8_t> messageData = fromHexString(message);
 		
@@ -1210,7 +1288,7 @@ RCT_EXPORT_METHOD(createSingleSignerSignature:(nonnull NSString *)message
 		}
 
 		// Resolve creating single-signer signature
-		resolve(toHexString(createSingleSignerSignature(messageData.data(), messageData.size(), secretKeyData.data(), secretKeyData.size(), secretNonce ? secretNonceData.data() : nullptr, secretNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicNonceTotal ? publicNonceTotalData.data() : nullptr, publicNonceTotalData.size(), seed.data(), seed.size())));
+		resolve(toHexString(createSingleSignerSignature(contextSeed.data(), contextSeed.size(), messageData.data(), messageData.size(), secretKeyData.data(), secretKeyData.size(), secretNonce ? secretNonceData.data() : nullptr, secretNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicNonceTotal ? publicNonceTotalData.data() : nullptr, publicNonceTotalData.size(), seed.data(), seed.size())));
 	}
 
 	// Catch errors
@@ -1248,6 +1326,9 @@ RCT_EXPORT_METHOD(addSingleSignerSignatures:(nonnull NSArray *)signatures
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get number of signatures
 		const NSUInteger numberOfSignatures = [signatures count];
 	
@@ -1276,7 +1357,7 @@ RCT_EXPORT_METHOD(addSingleSignerSignatures:(nonnull NSArray *)signatures
 		const vector<uint8_t> publicNonceTotalData = fromHexString(publicNonceTotal);
 		
 		// Resolve adding single-signer signatures
-		resolve(toHexString(addSingleSignerSignatures(signaturesData.data(), signaturesSizes, numberOfSignatures, publicNonceTotalData.data(), publicNonceTotalData.size())));
+		resolve(toHexString(addSingleSignerSignatures(contextSeed.data(), contextSeed.size(), signaturesData.data(), signaturesSizes, numberOfSignatures, publicNonceTotalData.data(), publicNonceTotalData.size())));
 	}
 
 	// Catch errors
@@ -1318,6 +1399,9 @@ RCT_EXPORT_METHOD(verifySingleSignerSignature:(nonnull NSString *)signature
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from signature
 		const vector<uint8_t> signatureData = fromHexString(signature);
 		
@@ -1334,7 +1418,7 @@ RCT_EXPORT_METHOD(verifySingleSignerSignature:(nonnull NSString *)signature
 		const vector<uint8_t> publicKeyTotalData = fromHexString(publicKeyTotal);
 
 		// Return if single-signer signature is verified
-		resolve(toBool(verifySingleSignerSignature(signatureData.data(), signatureData.size(), messageData.data(), messageData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicKeyTotalData.data(), publicKeyTotalData.size(), fromBool(isPartial))));
+		resolve(toBool(verifySingleSignerSignature(contextSeed.data(), contextSeed.size(), signatureData.data(), signatureData.size(), messageData.data(), messageData.size(), publicNonce ? publicNonceData.data() : nullptr, publicNonceData.size(), publicKeyData.data(), publicKeyData.size(), publicKeyTotalData.data(), publicKeyTotalData.size(), fromBool(isPartial))));
 	}
 
 	// Catch errors
@@ -1371,11 +1455,14 @@ RCT_EXPORT_METHOD(singleSignerSignatureFromData:(nonnull NSString *)data
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from data
 		const vector<uint8_t> dataData = fromHexString(data);
 
 		// Resolve getting single-signer signature from data
-		resolve(toHexString(singleSignerSignatureFromData(dataData.data(), dataData.size())));
+		resolve(toHexString(singleSignerSignatureFromData(contextSeed.data(), contextSeed.size(), dataData.data(), dataData.size())));
 	}
 
 	// Catch errors
@@ -1412,11 +1499,14 @@ RCT_EXPORT_METHOD(compactSingleSignerSignature:(nonnull NSString *)signature
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from signature
 		const vector<uint8_t> signatureData = fromHexString(signature);
 
 		// Resolve compacting single-signer signature
-		resolve(toHexString(compactSingleSignerSignature(signatureData.data(), signatureData.size())));
+		resolve(toHexString(compactSingleSignerSignature(contextSeed.data(), contextSeed.size(), signatureData.data(), signatureData.size())));
 	}
 
 	// Catch errors
@@ -1453,11 +1543,14 @@ RCT_EXPORT_METHOD(uncompactSingleSignerSignature:(nonnull NSString *)signature
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from signature
 		const vector<uint8_t> signatureData = fromHexString(signature);
 
 		// Resolve uncompacting single-signer signature
-		resolve(toHexString(uncompactSingleSignerSignature(signatureData.data(), signatureData.size())));
+		resolve(toHexString(uncompactSingleSignerSignature(contextSeed.data(), contextSeed.size(), signatureData.data(), signatureData.size())));
 	}
 
 	// Catch errors
@@ -1494,6 +1587,9 @@ RCT_EXPORT_METHOD(combinePublicKeys:(nonnull NSArray *)publicKeys
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get number of public keys
 		const NSUInteger numberOfPublicKeys = [publicKeys count];
 	
@@ -1519,7 +1615,7 @@ RCT_EXPORT_METHOD(combinePublicKeys:(nonnull NSArray *)publicKeys
 		}
 		
 		// Resolve combining public keys
-		resolve(toHexString(combinePublicKeys(publicKeysData.data(), publicKeysSizes, numberOfPublicKeys)));
+		resolve(toHexString(combinePublicKeys(contextSeed.data(), contextSeed.size(), publicKeysData.data(), publicKeysSizes, numberOfPublicKeys)));
 	}
 
 	// Catch errors
@@ -1555,6 +1651,9 @@ RCT_EXPORT_METHOD(createSecretNonce:(RCTPromiseResolveBlock)resolve
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Check if creating random seed failed
 		vector<uint8_t> seed(seedSize());
 		if(SecRandomCopyBytes(kSecRandomDefault, seed.size(), seed.data()) != errSecSuccess) {
@@ -1564,7 +1663,7 @@ RCT_EXPORT_METHOD(createSecretNonce:(RCTPromiseResolveBlock)resolve
 		}
 		
 		// Resolve creating secure nonce
-		resolve(toHexString(createSecretNonce(seed.data(), seed.size())));
+		resolve(toHexString(createSecretNonce(contextSeed.data(), contextSeed.size(), seed.data(), seed.size())));
 	}
 
 	// Catch errors
@@ -1602,6 +1701,9 @@ RCT_EXPORT_METHOD(createMessageHashSignature:(nonnull NSString *)messageHash
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from message hash
 		const vector<uint8_t> messageHashData = fromHexString(messageHash);
 		
@@ -1609,7 +1711,7 @@ RCT_EXPORT_METHOD(createMessageHashSignature:(nonnull NSString *)messageHash
 		const vector<uint8_t> secretKeyData = fromHexString(secretKey);
 
 		// Resolve creating message hash signature
-		resolve(toHexString(createMessageHashSignature(messageHashData.data(), messageHashData.size(), secretKeyData.data(), secretKeyData.size())));
+		resolve(toHexString(createMessageHashSignature(contextSeed.data(), contextSeed.size(), messageHashData.data(), messageHashData.size(), secretKeyData.data(), secretKeyData.size())));
 	}
 
 	// Catch errors
@@ -1648,6 +1750,9 @@ RCT_EXPORT_METHOD(verifyMessageHashSignature:(nonnull NSString *)signature
 	// Try
 	try {
 	
+		// Initialize context seed
+		initializeContextSeed();
+		
 		// Get data from signature
 		const vector<uint8_t> signatureData = fromHexString(signature);
 		
@@ -1658,7 +1763,7 @@ RCT_EXPORT_METHOD(verifyMessageHashSignature:(nonnull NSString *)signature
 		const vector<uint8_t> publicKeyData = fromHexString(publicKey);
 
 		// Resolve if message hash signature is verified
-		resolve(toBool(verifyMessageHashSignature(signatureData.data(), signatureData.size(), messageHashData.data(), messageHashData.size(), publicKeyData.data(), publicKeyData.size())));
+		resolve(toBool(verifyMessageHashSignature(contextSeed.data(), contextSeed.size(), signatureData.data(), signatureData.size(), messageHashData.data(), messageHashData.size(), publicKeyData.data(), publicKeyData.size())));
 	}
 
 	// Catch errors
@@ -1890,4 +1995,23 @@ const NSNumber *toBool(bool input) {
 
 	// Return result
 	return result;
+}
+
+// Initialize context seed
+void initializeContextSeed() {
+
+	// Check if context seed doesn't exist
+	if(contextSeed.empty()) {
+	
+		// Check if creating random context seed failed
+		contextSeed.resize(seedSize());
+		if(SecRandomCopyBytes(kSecRandomDefault, contextSeed.size(), contextSeed.data()) != errSecSuccess) {
+		
+			// Clear context seed
+			contextSeed.clear();
+			
+			// Throw error
+			throw runtime_error("Creating random context seed failed");
+		}
+	}
 }
