@@ -4,3 +4,4 @@ Secp256k1-zkp-NPM-Package-master
 node_modules
 lib
 yarn.lock
+.idea
